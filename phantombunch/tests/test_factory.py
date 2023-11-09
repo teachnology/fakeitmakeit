@@ -140,3 +140,20 @@ class TestUsername:
 
     def test_letters(self):
         assert 2 <= sum(i.isalpha() for i in pb.username("John Smith")) <= 3
+
+
+class TestEmail:
+    def test_type(self):
+        assert isinstance(pb.email(), str)
+
+    def test_at(self):
+        assert "@" in pb.email()
+
+    def test_dot(self):
+        assert "." in pb.email()
+
+    def test_domain(self):
+        assert pb.email(domain="gmail.com").endswith("@gmail.com")
+
+    def test_valid(self):
+        assert all(pb.valid_email(pb.email()) for _ in range(100))

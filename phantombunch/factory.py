@@ -229,3 +229,11 @@ def username(name):
 
     # Combine letters and numbers to form the string
     return letters + numbers
+
+def email(domain=None):
+    fake = Faker()
+    if domain is None:
+        return fake.email()
+    else:
+        prefix = fake.email().split("@")[0]
+        return prefix + "@" + domain

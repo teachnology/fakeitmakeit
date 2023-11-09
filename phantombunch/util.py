@@ -1,6 +1,6 @@
 import pycountry
 import faker
-
+import re
 
 COUNTRIES = [country.name for country in pycountry.countries]
 GENDERS = {"male": 0.49, "female": 0.5, "nonbinary": 0.01}
@@ -30,3 +30,8 @@ def locale(country):
             return locale
     else:
         return None
+
+
+def valid_email(email):
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return bool(re.match(pattern, email))
