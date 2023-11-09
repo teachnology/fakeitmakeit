@@ -84,25 +84,29 @@ def country(values=list(util.COUNTRIES), bias=None):
         Randomly generated country.
 
     """
-    if bias is not None:
-        if not all(country in values for country in bias.keys()):
-            raise ValueError("The countries in `bias` must be present in `values`.")
+    base_probability = 1 / len(values)
+    p_dict = {country: base_probability for country in values}
+    p_dict |= bias or {}
 
-        # Normalize the probabilities so that they sum to 1 and multipy with 100
-        # to get the frequencies at which they should be added to values to
-        # increase bias.
-        frequency = (
-            np.array(list(bias.values()))
-            / np.linalg.norm(list(bias.values()))
-            * len(values)
-            / 100
-        )
+    # if bias is not None:
+    #     if not all(country in values for country in bias.keys()):
+    #         raise ValueError("The countries in `bias` must be present in `values`.")
 
-        for country, frequency in zip(bias.keys(), frequency):
-            # Add the country more times to increase its probability.
-            values.extend([country] * int(frequency))
+    #     # Normalize the probabilities so that they sum to 1 and multipy with 100
+    #     # to get the frequencies at which they should be added to values to
+    #     # increase bias.
+    #     frequency = (
+    #         np.array(list(bias.values()))
+    #         / np.linalg.norm(list(bias.values()))
+    #         * len(values)
+    #         / 100
+    #     )
 
-    return random.choice(values)
+    #     for country, frequency in zip(bias.keys(), frequency):
+    #         # Add the country more times to increase its probability.
+    #         values.extend([country] * int(frequency))
+
+    return random.choices(list(p_dict.keys()), weights=list(p_dict.values()), k=1)[0]
 
 
 def name(gender=None, country=None, romanized=True):
@@ -275,3 +279,16 @@ def email(domain=None):
     else:
         prefix = fake.email().split("@")[0]
         return prefix + "@" + domain
+
+
+def tutor():
+    """Generate a random tutor.
+
+    Returns
+    -------
+    str
+
+        Randomly generated tutor.
+
+    """
+    return random.choice(util.TUTORS)
