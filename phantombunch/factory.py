@@ -206,6 +206,25 @@ def course(values=list(util.COURSES.keys()), probabilities=list(util.COURSES.val
 
 
 def username(name):
+    """Generate a random username.
+
+    The username is generated from the first letter of the first name, the first
+    letter of the last name and a random number between 2 and 4 digits. The
+    first digit of the number is never zero. The letters are lowercase.
+
+    Parameters
+    ----------
+    name: str
+
+        Person's name.
+
+    Returns
+    -------
+    str
+
+        Randomly generated username.
+
+    """
     # Get the first letter of the first name.
     first_letter, *_ = name.casefold().split()[0]
 
@@ -230,7 +249,26 @@ def username(name):
     # Combine letters and numbers to form the string
     return letters + numbers
 
+
 def email(domain=None):
+    """Generate a random email.
+
+    If ``domain`` is not provided, then a random email is generated. Otherwise,
+    the email is generated with the provided domain.
+
+    Parameters
+    ----------
+    domain: str
+
+        Domain of the email.
+
+    Returns
+    -------
+    str
+
+        Randomly generated email.
+
+    """
     fake = Faker()
     if domain is None:
         return fake.email()
