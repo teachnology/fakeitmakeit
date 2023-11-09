@@ -18,5 +18,30 @@ def cid():
     return number
 
 
-def gender():
-    pass
+def gender(values = ["male", "female", "nonbinary"],
+           probabilities = [0.49, 0.5, 0.01]):
+    """Generate a random gender.
+
+    Possible genders are passed via ``values`` and probabilities via ````
+    probabilities. The values in ``probabilities`` does not have to sum to 1
+    because selections will be made according to the relative weights.
+
+    Parameters
+    ----------
+    values: collections.abc.Sequence
+
+        Genders to choose from.
+
+    probabilities: collections.abc.Sequence
+
+        Probabilities of selecting gender.
+
+    Returns
+    -------
+    str
+
+        Randomly generated gender.
+    
+    """
+    return random.choices(values, weights=probabilities, k=1)[0]
+

@@ -1,4 +1,7 @@
+import re
 import phantombunch as pb
+
+UINT_RE = re.compile(r'^[0-9]+$')  # unsigned integer regex
 
 
 class TestCID:
@@ -12,7 +15,7 @@ class TestCID:
 
     def test_all_digits(self):
         # Check that the CID is all digits.
-        assert pb.cid().isdigit()
+        assert UINT_RE.search(pb.cid())
 
     def test_first_digit(self):
         # Check that the first digit is always 0.
@@ -30,3 +33,17 @@ class TestCID:
     def test_all_digits_present(self):
         # Check that all digits (0-9) can be present in the CID.
         assert len(set(''.join(pb.cid() for _ in range(100)))) == 10
+
+
+class TestGender:
+    def test_type(self):
+        assert isinstance(pb.gender(), str)
+
+    def test_values(self):
+        assert pb.gender() in ["male", "female", "nonbinary"]
+
+    def test_probabilities(self):
+        # Check that the probabilities are respected.
+        probabilities = [0.2, 0.75, 0.05]
+        genders = [pb.gender(probabilities=probabilities) for _ in range(10000)]
+        assert genders.count('nonbinary') < genders.count('male') < genders.count('female')
