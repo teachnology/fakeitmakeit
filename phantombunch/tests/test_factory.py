@@ -51,6 +51,39 @@ class TestGender:
         assert counts["nonbinary"] < counts["male"] < counts["female"]
 
 
+class TestTitle:
+    def test_type(self):
+        assert isinstance(pb.title(), str)
+
+    def test_values(self):
+        assert pb.title() in pb.TITLES
+
+    def test_male(self):
+        assert pb.title(gender='male') == 'Mr'
+
+    def test_female(self):
+        assert pb.title(gender='female') in ['Ms', 'Mrs']
+
+    def test_nonbinary(self):
+        assert pb.title(gender='nonbinary') in pb.TITLES
+
+
+
+class TestCourse:
+    def test_type(self):
+        assert isinstance(pb.course(), str)
+
+    def test_values(self):
+        assert pb.course() in pb.COURSES
+
+    def test_probabilities(self):
+        # Check that the probabilities are respected.
+        probabilities = [0.2, 0.75, 0.05]
+        courses = [pb.course(probabilities=probabilities) for _ in range(10000)]
+        counts = collections.Counter(courses)
+        assert counts["gems"] < counts["acse"] < counts["edsml"]
+
+
 class TestCountry:
     def test_type(self):
         assert isinstance(pb.country(), str)
@@ -63,3 +96,48 @@ class TestCountry:
         countries = [pb.country(bias=bias) for _ in range(100)]
         counts = collections.Counter(countries)
         assert counts["China"] > counts["United Kingdom"] > counts["Croatia"]
+
+
+class TestName:
+    def test_type(self):
+        assert isinstance(pb.name(), str)
+
+    def test_space(self):
+        assert " " in pb.name()
+
+    def test_country_gender(self):
+        for country in pb.COUNTRIES:
+            for gender in pb.GENDERS:
+                print(pb.name(gender=gender, country=country))
+                assert isinstance(pb.name(gender=gender, country=country), str)
+
+    def test_china(self):
+        names = ' '.join(pb.name(country="China") for _ in range(500))
+        assert 'Wang' in names
+        assert 'Zhang' in names
+
+
+class TestUsername:
+    def test_type(self):
+        assert isinstance(pb.username("John Smith"), str)
+
+    def test_length(self):
+        assert 4 <= len(pb.username("John Smith")) <= 7
+
+    def test_lower(self):
+        assert pb.username("John Smith").islower()
+
+    def test_no_space(self):
+        assert " " not in pb.username("John Smith")
+
+    def test_first_letter(self):
+        assert pb.username("John Smith")[0] == "j"
+
+    def test_last_letter(self):
+        assert 's' in pb.username("John Smith")
+
+    def test_digits(self):
+        assert 2 <= sum(i.isdigit() for i in pb.username("John Smith")) <= 4
+
+    def test_letters(self):
+        assert 2 <= sum(i.isalpha() for i in pb.username("John Smith")) <= 3

@@ -4,6 +4,8 @@ import faker
 
 COUNTRIES = [country.name for country in pycountry.countries]
 GENDERS = {"male": 0.49, "female": 0.5, "nonbinary": 0.01}
+COURSES = {"acse": 0.4, "edsml": 0.45, "gems": 0.15}
+TITLES = ["Mr", "Ms", "Mrs"]
 
 
 def locale(country):
