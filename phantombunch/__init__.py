@@ -1,1 +1,3 @@
-from .util import cid, gender
+from .factory import cid, gender, country
+
+from .util import GENDERS, COUNTRIES

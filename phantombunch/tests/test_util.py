@@ -1,49 +1,49 @@
-import re
-import phantombunch as pb
+import numbers
+import phantombunch.util as util
+import faker
 
-UINT_RE = re.compile(r'^[0-9]+$')  # unsigned integer regex
 
-
-class TestCID:
+class TestCOUNTRIES:
     def test_type(self):
-        # Check that the CID is a string.
-        assert isinstance(pb.cid(), str)
+        assert isinstance(util.COUNTRIES, list)
 
     def test_length(self):
-        # Check that the CID is 8 digits long.
-        assert len(pb.cid()) == 8
-
-    def test_all_digits(self):
-        # Check that the CID is all digits.
-        assert UINT_RE.search(pb.cid())
-
-    def test_first_digit(self):
-        # Check that the first digit is always 0.
-        assert all(pb.cid()[0] for _ in range(100))
-
-    def test_second_digit(self):
-        # Check that the second digit is always 1 or 2.
-        assert all(pb.cid()[1] in ['1', '2'] for _ in range(100))
-
-    def test_remaining_digits(self):
-        # Check that the remaining 6 digits are always between 0 and 9.
-        digits_0_to_9 = [str(i) for i in range(10)]
-        assert all(i in digits_0_to_9 for i in pb.cid()[2:] for _ in range(100))
-
-    def test_all_digits_present(self):
-        # Check that all digits (0-9) can be present in the CID.
-        assert len(set(''.join(pb.cid() for _ in range(100)))) == 10
-
-
-class TestGender:
-    def test_type(self):
-        assert isinstance(pb.gender(), str)
+        assert len(util.COUNTRIES) == 249
 
     def test_values(self):
-        assert pb.gender() in ["male", "female", "nonbinary"]
+        assert "Afghanistan" in util.COUNTRIES
+        assert "Serbia" in util.COUNTRIES
 
-    def test_probabilities(self):
-        # Check that the probabilities are respected.
-        probabilities = [0.2, 0.75, 0.05]
-        genders = [pb.gender(probabilities=probabilities) for _ in range(10000)]
-        assert genders.count('nonbinary') < genders.count('male') < genders.count('female')
+
+class TestGENDERS:
+    def test_type(self):
+        assert isinstance(util.GENDERS, dict)
+
+    def test_length(self):
+        assert len(util.GENDERS) == 3
+
+    def test_keys(self):
+        assert all(isinstance(key, str) for key in util.GENDERS.keys())
+        assert "male" in util.GENDERS
+
+    def test_values(self):
+        assert all(isinstance(value, numbers.Real) for value in util.GENDERS.values())
+
+
+class TestLocale:
+    def test_type(self):
+        assert isinstance(util.locale("Germany"), str)
+        assert util.locale("Serbia") is None
+
+    def test_values(self):
+        assert util.locale("United Kingdom") == "en_GB"
+        assert util.locale("Serbia") is None
+
+    def test_available_in_faker(self):
+        possible_locales = [
+            util.locale(country)
+            for country in util.COUNTRIES
+            if util.locale(country) is not None
+        ]
+        assert set(possible_locales) <= set(faker.config.AVAILABLE_LOCALES)
+        assert len(possible_locales) == len(set(possible_locales))
