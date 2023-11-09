@@ -1,7 +1,6 @@
 import re
 import phantombunch as pb
 import collections
-import random
 
 UINT_RE = re.compile(r"^[0-9]+$")  # unsigned integer regex
 

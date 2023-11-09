@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 import phantombunch as pb
-import random
 
 
 @dataclass
@@ -34,11 +33,11 @@ def student():
             "India": 0.2,
             "France": 0.2,
             "Hong Kong": 0.1,
-            'Spain': 0.1,
-            'Italy': 0.1,
-            'Netherlands': 0.1,
-            'United States': 0.25,
-            'Canada': 0.1,
+            "Spain": 0.1,
+            "Italy": 0.1,
+            "Netherlands": 0.1,
+            "United States": 0.25,
+            "Canada": 0.1,
         }
     )
     full_name = pb.name(gender=gender, country=nationality)

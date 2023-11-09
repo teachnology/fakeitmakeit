@@ -24,3 +24,6 @@ dependencies = [
 
 [project.urls]
 "Homepage" = "https://github.com/marijanbeg/phantombunch"
+
+[tool.ruff]
+ignore-init-module-imports = true
