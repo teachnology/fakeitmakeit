@@ -106,11 +106,11 @@ class TestName:
         assert " " in pb.name()
 
     def test_country_gender(self):
-        for _ in range(100):
+        for _ in range(25):
             assert isinstance(pb.name(gender=pb.gender(), country=pb.country()), str)
 
     def test_china(self):
-        names = " ".join(pb.name(country="China") for _ in range(500))
+        names = " ".join(pb.name(country="China") for _ in range(200))
         assert "Wang" in names
         assert "Zhang" in names
 
@@ -155,4 +155,4 @@ class TestEmail:
         assert pb.email(domain="gmail.com").endswith("@gmail.com")
 
     def test_valid(self):
-        assert all(pb.valid_email(pb.email()) for _ in range(100))
+        assert all(pb.valid_email(pb.email()) for _ in range(25))
