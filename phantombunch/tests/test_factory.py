@@ -59,14 +59,13 @@ class TestTitle:
         assert pb.title() in pb.TITLES
 
     def test_male(self):
-        assert pb.title(gender='male') == 'Mr'
+        assert pb.title(gender="male") == "Mr"
 
     def test_female(self):
-        assert pb.title(gender='female') in ['Ms', 'Mrs']
+        assert pb.title(gender="female") in ["Ms", "Mrs"]
 
     def test_nonbinary(self):
-        assert pb.title(gender='nonbinary') in pb.TITLES
-
+        assert pb.title(gender="nonbinary") in pb.TITLES
 
 
 class TestCourse:
@@ -112,9 +111,9 @@ class TestName:
                 assert isinstance(pb.name(gender=gender, country=country), str)
 
     def test_china(self):
-        names = ' '.join(pb.name(country="China") for _ in range(500))
-        assert 'Wang' in names
-        assert 'Zhang' in names
+        names = " ".join(pb.name(country="China") for _ in range(500))
+        assert "Wang" in names
+        assert "Zhang" in names
 
 
 class TestUsername:
@@ -134,7 +133,7 @@ class TestUsername:
         assert pb.username("John Smith")[0] == "j"
 
     def test_last_letter(self):
-        assert 's' in pb.username("John Smith")
+        assert "s" in pb.username("John Smith")
 
     def test_digits(self):
         assert 2 <= sum(i.isdigit() for i in pb.username("John Smith")) <= 4

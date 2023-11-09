@@ -9,7 +9,6 @@ import string
 fake = Faker()
 
 
-
 def cid():
     """Generate a random 8-digit CID number.
 
@@ -18,7 +17,7 @@ def cid():
     Returns
     -------
     str
-    
+
             Randomly generated CID number.
 
     """
@@ -111,7 +110,7 @@ def name(gender=None, country=None, romanized=True):
 
     If ``romanized`` is True, then the romanized version of the name is returned
     if possible. Otherwise, the name with the default locale is returned.
-    
+
     Parameters
     ----------
     gender: str
@@ -136,11 +135,11 @@ def name(gender=None, country=None, romanized=True):
     locale = util.locale(country) if country is not None else None
     fake = Faker(locale) if locale is not None else Faker()
 
-    if romanized and hasattr(fake, 'romanized_name'):
+    if romanized and hasattr(fake, "romanized_name"):
         return fake.romanized_name()
 
-    method = f'name_{gender}' if gender is not None else 'name'
-    
+    method = f"name_{gender}" if gender is not None else "name"
+
     # Not all countries have names for different genders.
     try:
         res = getattr(fake, method)()
@@ -151,9 +150,9 @@ def name(gender=None, country=None, romanized=True):
         res = getattr(Faker(), method)()
 
     # Remove suffixes and prefixes - PhD, words with dots and all caps.
-    pattern = r'\b(?:[A-Z]+\b|PhD|Dr\(a\)|,|\w*\.\w*)'
-    return re.sub(pattern, '', res).strip()
-    
+    pattern = r"\b(?:[A-Z]+\b|PhD|Dr\(a\)|,|\w*\.\w*)"
+    return re.sub(pattern, "", res).strip()
+
 
 def title(gender=None):
     """Generate a random title.
@@ -171,13 +170,13 @@ def title(gender=None):
         Randomly generated title.
 
     """
-    if gender == 'male':
-        return 'Mr'
-    elif gender == 'female':
-        return random.choice(['Ms', 'Mrs'])
+    if gender == "male":
+        return "Mr"
+    elif gender == "female":
+        return random.choice(["Ms", "Mrs"])
     else:
         return random.choice(util.TITLES)
-    
+
 
 def course(values=list(util.COURSES.keys()), probabilities=list(util.COURSES.values())):
     """Generate a random course.
@@ -212,21 +211,21 @@ def username(name):
 
     # Get the first letter of the last name.
     last_letter, *_ = name.casefold().split()[-1]
-    
+
     # Generate a random middle lowercase letter (can be any lowercase letter).
     middle_letter = random.choice(string.ascii_lowercase)
-    
+
     # Randomly decide if the string will have 2 or 3 letters.
     if random.choice([2, 3]) == 3:
         letters = first_letter + middle_letter + last_letter
     else:
         letters = first_letter + last_letter
-    
+
     # Generate a random number between 2 and 4 digits where the first digit is not zero.
     num_digits = random.choice([2, 3, 4])
     numbers = str(random.randint(1, 9))  # First digit is never zero
     for _ in range(num_digits - 1):
         numbers += str(random.randint(0, 9))
-    
+
     # Combine letters and numbers to form the string
     return letters + numbers
