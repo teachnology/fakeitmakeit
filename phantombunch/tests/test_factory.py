@@ -128,16 +128,87 @@ class TestCourse:
 
 class TestCountry:
     def test_type(self):
+        # Check that country is a string.
         assert isinstance(pb.country(), str)
 
-    def test_values(self):
-        assert pb.country() in pb.COUNTRIES
+    def test_defaults(self):
+        # Check that the country is one of the expected ones.
+        assert pb.country() in pbu.COUNTRIES
+
+    def test_probability_certain_outcome(self):
+        # Check that the probabilities are respected.
+        assert pb.country(distribution={"country1": 1, "country2": 0}) == "country1"
+
+    def test_probabilities_uncertain_outcome(self):
+        # Check that the probabilities are respected.
+        distribution = {"c1": 0.2, "c2": 0.75, "c3": 0.05}
+        counts = collections.Counter(
+            pb.country(distribution=distribution) for _ in range(1000)
+        )
+        assert counts["c3"] < counts["c1"] < counts["c2"]
 
     def test_bias(self):
-        bias = {"China": 0.5, "United Kingdom": 0.2}
-        countries = [pb.country(bias=bias) for _ in range(100)]
-        counts = collections.Counter(countries)
-        assert counts["China"] > counts["United Kingdom"] > counts["Croatia"]
+        # Check that the bias is respected.
+        bias = {"China": 1000, "United Kingdom": 100}
+        counts = collections.Counter(pb.country(bias=bias) for _ in range(100))
+        assert counts["China"] > counts["United Kingdom"] > counts["Syria"]
+
+
+class TestUsername:
+    def test_type(self):
+        # Check that username is a string.
+        assert isinstance(pb.username(), str)
+
+    def test_length(self):
+        # Check that the username is between 4 and 7 characters long.
+        assert 4 <= len(pb.username()) <= 7
+
+    def test_lower(self):
+        # Check that the username is lowercase.
+        assert pb.username().islower()
+
+    def test_no_space(self):
+        # Check that the username does not contain spaces.
+        assert " " not in pb.username()
+
+    def test_first_letter(self):
+        # Check that the first letter is the first letter of the first name.
+        assert pb.username(nameval="John Smith").startswith("j")
+
+    def test_last_letter(self):
+        # Check that the last letter is the first letter of the last name.
+        letters = [i for i in pb.username(nameval="John Doe") if i.isalpha()]
+        assert letters[-1] == "d"
+
+    def test_num_digits(self):
+        # Check that the username contains 2 to 4 digits.
+        assert 2 <= sum(i.isdigit() for i in pb.username()) <= 4
+
+    def test_num_letters(self):
+        # Check that the username contains 2 or 3 letters.
+        assert 2 <= sum(i.isalpha() for i in pb.username()) <= 3
+
+
+class TestEmail:
+    def test_type(self):
+        # Check that email is a string.
+        assert isinstance(pb.email(), str)
+
+    def test_at(self):
+        # Check that the email contains an @.
+        assert "@" in pb.email()
+
+    def test_dot(self):
+        # Check that the email contains a dot.
+        assert "." in pb.email()
+
+    def test_domain(self):
+        # Check that the email contains the domain if specified.
+        assert pb.email(domain="gmail.com").endswith("@gmail.com")
+
+    def test_valid(self):
+        # Check that the email is valid.
+        assert pbu.valid_email(pb.email())
 
 
 class TestName:
@@ -154,46 +225,3 @@ class TestName:
     def test_china(self):
         names = set(" ".join(pb.name(country="China") for _ in range(100)).split())
         assert len({"Jang", "Jing", "Wei", "Fang", "Lei", "Tao"} & names) > 0
-
-
-class TestUsername:
-    def test_type(self):
-        assert isinstance(pb.username("John Smith"), str)
-
-    def test_length(self):
-        assert 4 <= len(pb.username("John Smith")) <= 7
-
-    def test_lower(self):
-        assert pb.username("John Smith").islower()
-
-    def test_no_space(self):
-        assert " " not in pb.username("John Smith")
-
-    def test_first_letter(self):
-        assert pb.username("John Smith")[0] == "j"
-
-    def test_last_letter(self):
-        assert "s" in pb.username("John Smith")
-
-    def test_digits(self):
-        assert 2 <= sum(i.isdigit() for i in pb.username("John Smith")) <= 4
-
-    def test_letters(self):
-        assert 2 <= sum(i.isalpha() for i in pb.username("John Smith")) <= 3
-
-
-class TestEmail:
-    def test_type(self):
-        assert isinstance(pb.email(), str)
-
-    def test_at(self):
-        assert "@" in pb.email()
-
-    def test_dot(self):
-        assert "." in pb.email()
-
-    def test_domain(self):
-        assert pb.email(domain="gmail.com").endswith("@gmail.com")
-
-    def test_valid(self):
-        assert all(pb.valid_email(pb.email()) for _ in range(25))

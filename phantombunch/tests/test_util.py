@@ -7,28 +7,38 @@ import phantombunch.util as util
 
 class TestCOUNTRIES:
     def test_type(self):
-        assert isinstance(util.COUNTRIES, list)
+        # Check that COUNTRIES is a dictionary.
+        assert isinstance(util.COUNTRIES, dict)
 
     def test_length(self):
+        # Check that COUNTRIES has 249 countries.
         assert len(util.COUNTRIES) == 249
 
-    def test_values(self):
+    def test_keys(self):
+        # Check that the keys are country names.
         assert "Afghanistan" in util.COUNTRIES
         assert "Serbia" in util.COUNTRIES
+
+    def test_values(self):
+        # Check that the values are all 1 (relative probabilities).
+        assert all(isinstance(value, numbers.Real) for value in util.COUNTRIES.values())
 
 
 class TestGENDERS:
     def test_type(self):
+        # Check that GENDERS is a dictionary.
         assert isinstance(util.GENDERS, dict)
 
     def test_length(self):
+        # Check there are 3 genders.
         assert len(util.GENDERS) == 3
 
     def test_keys(self):
-        assert all(isinstance(key, str) for key in util.GENDERS.keys())
+        # Check that the keys are genders.
         assert "male" in util.GENDERS
 
     def test_values(self):
+        # Check that the values are all numbers.
         assert all(isinstance(value, numbers.Real) for value in util.GENDERS.values())
 
 

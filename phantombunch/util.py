@@ -7,8 +7,10 @@ import pycountry
 GENDERS = {"male": 0.49, "female": 0.5, "nonbinary": 0.01}
 TITLES = ["Mr", "Ms", "Mrs", "Miss", "Mx"]
 COURSES = {"acse": 0.4, "edsml": 0.4, "gems": 0.2}
-COUNTRIES = [country.name for country in pycountry.countries]
+COUNTRIES = {country.name: 1 for country in pycountry.countries}
 TUTORS = [faker.Faker().name() for _ in range(25)]
+
+EMAIL_RE = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 
 def locale(country):
@@ -57,5 +59,27 @@ def discrete_draw(distribution):
 
 
 def valid_email(email):
-    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-    return bool(re.match(pattern, email))
+    """Check if email is valid.
+
+    Parameters
+    ----------
+    email: str
+
+        Email address.
+
+    Returns
+    -------
+    bool
+
+        True if valid, otherwise False.
+
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.valid_email('johndoe@gmail.com')
+    True
+    >>> pb.valid_email('johndoe')
+    False
+
+    """
+    return bool(re.match(EMAIL_RE, email))

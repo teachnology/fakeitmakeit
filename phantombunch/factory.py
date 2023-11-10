@@ -153,24 +153,24 @@ def course(distribution=dict(pbu.COURSES)):
     return pbu.discrete_draw(distribution)
 
 
-def country(values=list(pbu.COUNTRIES), bias=None):
+def country(distribution=dict(pbu.COUNTRIES), bias=None):
     """Generate a random country.
 
-    Possible countries are passed via ``values``. If the probability of some
-    countries should be increased, then a dictionary of country names and their
-    relative probabilities. If ``bias`` is not provided, then all countries are
-    equally likely. The values in ``bias`` does not have to sum to 1 because
-    selections will be made according to the relative weights.
+    Distribution is passed via ``distribution``. It is a dictionary where keys
+    are possible output values and dictionary values are relative
+    probablilities. The values in ``distribution`` do not have to sum to 1
+    because selections will be made according to the relative weights. By
+    default, all countries are equally likely and their relative probablility is
+    1. To modify the default probablilities, pass a dictionary of countries and
+    their relative probabilities via ``bias``. Internally, ``distribution |=
+    bias`` is calculated.
 
     Parameters
     ----------
-    values: collections.abc.Sequence
+    distribution: dict
 
-        Countries to choose from.
-
-    bias: dict
-
-        Dictionary of countries and their relative probabilities.
+        Keys are possible output values and dictionary values are relative
+        probablilities.
 
     Returns
     -------
@@ -178,12 +178,117 @@ def country(values=list(pbu.COUNTRIES), bias=None):
 
         Randomly generated country.
 
-    """
-    base_probability = 1 / len(values)
-    p_dict = {country: base_probability for country in values}
-    p_dict |= bias or {}
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.country()  # doctest: +SKIP
+    'United Kingdom'
+    >>> pb.country(bias={'China': 0.5, 'United Kingdom': 0.2})  # doctest: +SKIP
+    'China'
+    >>> pb.country(distribution={}, bias={'France': 1})
+    'France'
 
-    return random.choices(list(p_dict.keys()), weights=list(p_dict.values()), k=1)[0]
+    """
+    distribution |= bias or {}
+    return pbu.discrete_draw(distribution)
+
+
+def username(nameval=None):
+    """Generate a random username.
+
+    The username is the combination of 2-3 lowercase letters and a random number
+    with 2 to 4 digits. The first letter of the username is the first letter of
+    the first name, whereas the the last letter of the username is the first
+    letter of the last name. Letters are followed with a random integer between
+    2 and 4 digits. The first digit of the number is never zero.
+
+    Parameters
+    ----------
+    nameval: str
+
+        Person's name.
+
+    Returns
+    -------
+    str
+
+        Randomly generated username.
+
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.username('John Smith')  # doctest: +SKIP
+    'jws4122'
+
+    """
+    nameval = nameval or name()
+
+    # Get the first letter of the first name.
+    first_letter, *_ = nameval.casefold().split()[0]
+
+    # Get the first letter of the last name.
+    last_letter, *_ = nameval.casefold().split()[-1]
+
+    # Randomly decide if the string will have 2 or 3 letters.
+    if random.choice([2, 3]) == 3:
+        # Generate a random middle lowercase letter (can be any lowercase letter).
+        middle_letter = random.choice(string.ascii_lowercase)
+        letters = first_letter + middle_letter + last_letter
+    else:
+        letters = first_letter + last_letter
+
+    # Generate a random number between 2 and 4 digits where the first digit is not zero.
+    num_digits = random.choice([2, 3, 4])
+    numbers = str(random.randint(1, 9))  # First digit is never zero
+    for _ in range(num_digits - 1):
+        numbers += str(random.randint(0, 9))
+
+    return letters + numbers
+
+
+def email(domain=None):
+    """Generate a random email.
+
+    If ``domain`` is not provided, then an email with a random domain is
+    generated. Otherwise, the email is generated with the provided domain.
+
+    Parameters
+    ----------
+    domain: str
+
+        Domain of the email.
+
+    Returns
+    -------
+    str
+
+        Randomly generated email.
+
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.email()  # doctest: +SKIP
+    'somerandomemail@domain.com'
+    >>> pb.email(domain='myuniversity.ac.uk')  # doctest: +SKIP
+    'john.doe@myuniversity.ac.uk'
+
+    """
+    fake = Faker()
+    domain = domain or fake.domain_name()
+    return f"{fake.user_name()}@{domain}"
+
+
+def tutor():
+    """Generate a random tutor.
+
+    Returns
+    -------
+    str
+
+        Randomly generated tutor.
+
+    """
+    return random.choice(pbu.TUTORS)
 
 
 def name(gender=None, country=None, romanized=True):
@@ -233,88 +338,3 @@ def name(gender=None, country=None, romanized=True):
     # Remove suffixes and prefixes - PhD, words with dots and all caps.
     pattern = r"\b(?:[A-Z]+\b|PhD|Dr\(a\)|,|\w*\.\w*)"
     return re.sub(pattern, "", res).strip()
-
-
-def username(name):
-    """Generate a random username.
-
-    The username is generated from the first letter of the first name, the first
-    letter of the last name and a random number between 2 and 4 digits. The
-    first digit of the number is never zero. The letters are lowercase.
-
-    Parameters
-    ----------
-    name: str
-
-        Person's name.
-
-    Returns
-    -------
-    str
-
-        Randomly generated username.
-
-    """
-    # Get the first letter of the first name.
-    first_letter, *_ = name.casefold().split()[0]
-
-    # Get the first letter of the last name.
-    last_letter, *_ = name.casefold().split()[-1]
-
-    # Generate a random middle lowercase letter (can be any lowercase letter).
-    middle_letter = random.choice(string.ascii_lowercase)
-
-    # Randomly decide if the string will have 2 or 3 letters.
-    if random.choice([2, 3]) == 3:
-        letters = first_letter + middle_letter + last_letter
-    else:
-        letters = first_letter + last_letter
-
-    # Generate a random number between 2 and 4 digits where the first digit is not zero.
-    num_digits = random.choice([2, 3, 4])
-    numbers = str(random.randint(1, 9))  # First digit is never zero
-    for _ in range(num_digits - 1):
-        numbers += str(random.randint(0, 9))
-
-    # Combine letters and numbers to form the string
-    return letters + numbers
-
-
-def email(domain=None):
-    """Generate a random email.
-
-    If ``domain`` is not provided, then a random email is generated. Otherwise,
-    the email is generated with the provided domain.
-
-    Parameters
-    ----------
-    domain: str
-
-        Domain of the email.
-
-    Returns
-    -------
-    str
-
-        Randomly generated email.
-
-    """
-    fake = Faker()
-    if domain is None:
-        return fake.email()
-    else:
-        prefix = fake.email().split("@")[0]
-        return prefix + "@" + domain
-
-
-def tutor():
-    """Generate a random tutor.
-
-    Returns
-    -------
-    str
-
-        Randomly generated tutor.
-
-    """
-    return random.choice(pbu.TUTORS)
