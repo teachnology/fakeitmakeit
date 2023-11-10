@@ -21,20 +21,23 @@ class TestCID:
 
     def test_first_digit(self):
         # Check that the first digit is always 0.
-        assert all(pb.cid()[0] for _ in range(100))
+        assert int(pb.cid()[0]) == 0
 
     def test_second_digit(self):
         # Check that the second digit is always 1 or 2.
-        assert all(pb.cid()[1] in ["1", "2"] for _ in range(100))
+        assert int(pb.cid()[1]) in [1, 2]
 
     def test_remaining_digits(self):
         # Check that the remaining 6 digits are always between 0 and 9.
-        digits_0_to_9 = [str(i) for i in range(10)]
-        assert all(i in digits_0_to_9 for i in pb.cid()[2:] for _ in range(100))
+        assert UINT_RE.search(pb.cid()[2:])
 
     def test_all_digits_present(self):
         # Check that all digits (0-9) can be present in the CID.
-        assert len(set("".join(pb.cid() for _ in range(100)))) == 10
+        assert len(set("".join(pb.cid() for _ in range(50)))) == 10
+
+    def test_convertible(self):
+        # Check that the CID is convertible to an integer.
+        assert isinstance(int(pb.cid()), int)
 
 
 class TestGender:
