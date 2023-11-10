@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 import phantombunch as pb
-import os
+
 
 @dataclass
 class Student:
