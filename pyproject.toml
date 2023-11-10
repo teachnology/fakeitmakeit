@@ -40,3 +40,11 @@ extend-select = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+ 
+[tool.coverage.run]
+omit = [
+    "phantombunch/tests/*.py",
+    ]
+
+[tool.pytest.ini_options]
+addopts = "-v --doctest-modules --junitxml=junit/test-results.xml --cov=phantombunch --cov-report=xml --cov-report=html"
