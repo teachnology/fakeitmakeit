@@ -1,13 +1,13 @@
+import random
 import re
 
 import faker
 import pycountry
-import random
 
-COUNTRIES = [country.name for country in pycountry.countries]
 GENDERS = {"male": 0.49, "female": 0.5, "nonbinary": 0.01}
-COURSES = {"acse": 0.4, "edsml": 0.4, "gems": 0.2}
 TITLES = ["Mr", "Ms", "Mrs", "Miss", "Mx"]
+COURSES = {"acse": 0.4, "edsml": 0.4, "gems": 0.2}
+COUNTRIES = [country.name for country in pycountry.countries]
 TUTORS = [faker.Faker().name() for _ in range(25)]
 
 

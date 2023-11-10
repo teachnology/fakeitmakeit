@@ -121,22 +121,21 @@ def title(genderval=None, use_period=False):
     return f"{res}." if use_period else res
 
 
-def course(values=list(pbu.COURSES.keys()), probabilities=list(pbu.COURSES.values())):
+def course(distribution=dict(pbu.COURSES)):
     """Generate a random course.
 
-    Possible courses are passed via ``values`` and probabilities via ````
-    probabilities. The values in ``probabilities`` does not have to sum to 1
-    because selections will be made according to the relative weights.
+    Possible courses and their relative probabilities are passed via
+    ``distribution``. It is a dictionary where keys are possible output values
+    and dictionary values are relative probablilities. The values in
+    ``distribution`` do not have to sum to 1 because selections will be made
+    according to the relative weights.
 
     Parameters
     ----------
-    values: collections.abc.Sequence
+    distribution: dict
 
-        Courses to choose from.
-
-    probabilities: collections.abc.Sequence
-
-        Probabilities of selecting courses.
+        Keys are possible output values and dictionary values are relative
+        probablilities. For instance, ``{"course1": 0.5, "course2": 0.5}``.
 
     Returns
     -------
@@ -144,8 +143,14 @@ def course(values=list(pbu.COURSES.keys()), probabilities=list(pbu.COURSES.value
 
         Randomly generated course.
 
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.course()  # doctest: +SKIP
+    'acse'
+
     """
-    return random.choices(values, weights=probabilities, k=1)[0]
+    return pbu.discrete_draw(distribution)
 
 
 def country(values=list(pbu.COUNTRIES), bias=None):

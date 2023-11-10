@@ -1,5 +1,6 @@
 import collections
 import re
+
 import pytest
 
 import phantombunch as pb
@@ -105,17 +106,24 @@ class TestTitle:
 
 class TestCourse:
     def test_type(self):
+        # Check that course is a string.
         assert isinstance(pb.course(), str)
 
     def test_values(self):
-        assert pb.course() in pb.COURSES
+        # Check the output is one of the expected ones.
+        assert pb.course() in pbu.COURSES
 
-    def test_probabilities(self):
+    def test_probability_certain_outcome(self):
         # Check that the probabilities are respected.
-        probabilities = [0.2, 0.75, 0.05]
-        courses = [pb.course(probabilities=probabilities) for _ in range(10000)]
-        counts = collections.Counter(courses)
-        assert counts["gems"] < counts["acse"] < counts["edsml"]
+        assert pb.course(distribution={"course1": 1, "course2": 0}) == "course1"
+
+    def test_probabilities_uncertain_outcome(self):
+        # Check that the probabilities are respected.
+        distribution = {"c1": 0.2, "c2": 0.75, "c3": 0.05}
+        counts = collections.Counter(
+            pb.course(distribution=distribution) for _ in range(1000)
+        )
+        assert counts["c3"] < counts["c1"] < counts["c2"]
 
 
 class TestCountry:
