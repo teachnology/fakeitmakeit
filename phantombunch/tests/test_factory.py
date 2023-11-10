@@ -211,6 +211,9 @@ class TestEmail:
         assert pbu.valid_email(pb.email())
 
 
+class TestTutor:
+    pass
+
 class TestName:
     def test_type(self):
         assert isinstance(pb.name(), str)
