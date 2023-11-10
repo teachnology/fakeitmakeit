@@ -10,7 +10,7 @@ authors = [
 ]
 description = "A Python package for generating random personal data."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: BSD-3-Clause License",
@@ -26,4 +26,17 @@ dependencies = [
 "Homepage" = "https://github.com/marijanbeg/phantombunch"
 
 [tool.ruff]
-ignore-init-module-imports = true
+line-length = 88
+
+[tool.ruff.lint]
+# Add the `line-too-long` rule to the enforced rule set. By default, Ruff omits rules that
+# overlap with the use of a formatter, like Black, but we can override this behavior by
+# explicitly adding the rule.
+extend-select = [
+    "E501",  # line-too-long 
+    "UP",  # pyupgrade
+    # "D",  # pydocstyle
+    ]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"

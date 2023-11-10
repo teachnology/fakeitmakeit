@@ -1,6 +1,7 @@
-import pycountry
-import faker
 import re
+
+import faker
+import pycountry
 
 COUNTRIES = [country.name for country in pycountry.countries]
 GENDERS = {"male": 0.49, "female": 0.5, "nonbinary": 0.01}

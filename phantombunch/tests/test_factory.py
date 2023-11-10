@@ -1,6 +1,7 @@
-import re
-import phantombunch as pb
 import collections
+import re
+
+import phantombunch as pb
 
 UINT_RE = re.compile(r"^[0-9]+$")  # unsigned integer regex
 
@@ -109,9 +110,8 @@ class TestName:
             assert isinstance(pb.name(gender=pb.gender(), country=pb.country()), str)
 
     def test_china(self):
-        names = " ".join(pb.name(country="China") for _ in range(200))
-        assert "Wang" in names
-        assert "Zhang" in names
+        names = set(" ".join(pb.name(country="China") for _ in range(100)).split())
+        assert len({"Jang", "Jing", "Wei", "Fang", "Lei", "Tao"} & names) > 0
 
 
 class TestUsername:

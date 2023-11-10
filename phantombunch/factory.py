@@ -1,8 +1,10 @@
-from faker import Faker
 import random
-import phantombunch.util as util
 import re
 import string
+
+from faker import Faker
+
+import phantombunch.util as util
 
 fake = Faker()
 
@@ -10,7 +12,8 @@ fake = Faker()
 def cid():
     """Generate a random 8-digit CID number.
 
-    The first digit is always 0, whereas the second digit is randomly 1 or 2. The remaining 6 digits are randomly generated between 0 and 9.
+    The first digit is always 0, whereas the second digit is randomly 1 or 2.
+    The remaining 6 digits are randomly generated between 0 and 9.
 
     Returns
     -------

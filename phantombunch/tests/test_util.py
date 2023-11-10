@@ -1,6 +1,8 @@
 import numbers
-import phantombunch.util as util
+
 import faker
+
+import phantombunch.util as util
 
 
 class TestCOUNTRIES:

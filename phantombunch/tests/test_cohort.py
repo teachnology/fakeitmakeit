@@ -1,5 +1,6 @@
-import phantombunch as pb
 import pandas as pd
+
+import phantombunch as pb
 
 
 class TestCohort:

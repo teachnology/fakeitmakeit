@@ -1,5 +1,6 @@
-from .student import student
 import pandas as pd
+
+from .student import student
 
 COLUMNS = [
     "cid",
