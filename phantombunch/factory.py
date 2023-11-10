@@ -4,7 +4,7 @@ import string
 
 from faker import Faker
 
-import phantombunch.util as util
+import phantombunch.util as pbu
 
 
 def cid() -> str:
@@ -31,29 +31,28 @@ def cid() -> str:
 
     # The second digit is randomly 1 or 2.
     number += str(random.choice([1, 2]))
-    
+
     # Generate the remaining 6 digits randomly between 0 and 9.
     number += "".join(str(random.randint(0, 9)) for _ in range(6))
 
     return number
 
 
-def gender(values=list(util.GENDERS.keys()), probabilities=list(util.GENDERS.values())):
+def gender(distribution=dict(pbu.GENDERS)) -> str:
     """Generate a random gender.
 
-    Possible genders are passed via ``values`` and probabilities via ````
-    probabilities. The values in ``probabilities`` does not have to sum to 1
-    because selections will be made according to the relative weights.
+    Possible genders and their relative probabilities are passed via
+    ``distribution``. It is a dictionary where keys are possible output values
+    and dictionary values are relative probablilities. The values in
+    ``distribution`` do not have to sum to 1 because selections will be made
+    according to the relative weights.
 
     Parameters
     ----------
-    values: collections.abc.Sequence
+    distribution: dict
 
-        Genders to choose from.
-
-    probabilities: collections.abc.Sequence
-
-        Probabilities of selecting gender.
+        Keys are possible output values and dictionary values are relative
+        probablilities. For instance, ``{"male": 0.5, "female": 0.5}``.
 
     Returns
     -------
@@ -61,11 +60,95 @@ def gender(values=list(util.GENDERS.keys()), probabilities=list(util.GENDERS.val
 
         Randomly generated gender.
 
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.gender()  # doctest: +SKIP
+    'male'
+
+    """
+    return pbu.discrete_draw(distribution)
+
+
+def title(genderval=None, use_period=False):
+    """Generate a random title.
+
+    If gender, via ``genderval``, is provided, then the title is generated
+    according to it. Otherwise, the gender and accordingly the title is
+    generated randomly.
+
+    For further details, refer to:
+    - https://www.grammarly.com/blog/ms-mrs-miss-difference/
+    - https://publishing.rcseng.ac.uk/doi/pdf/10.1308/rcsbull.2021.141
+
+    Parameters
+    ----------
+    genderval: str
+
+        Person's gender.
+
+    use_period: bool
+
+        Whether to use a period at the end of the title.
+
+    Returns
+    -------
+    str
+
+        Randomly generated title according to the gender.
+
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.title('male')
+    'Mr'
+    >>> pb.title()  # doctest: +SKIP
+    'Mx'
+    >>> pb.title(use_period=True)  # doctest: +SKIP
+    'Mrs.'
+
+    """
+    genderval = genderval or gender()
+    if genderval == "male":
+        res = "Mr"
+    elif genderval == "female":
+        res = random.choice(["Ms", "Mrs", "Miss"])
+    elif genderval == "nonbinary":
+        res = "Mx"
+    else:
+        raise ValueError(f"Invalid gender: {genderval=}")
+
+    return f"{res}." if use_period else res
+
+
+def course(values=list(pbu.COURSES.keys()), probabilities=list(pbu.COURSES.values())):
+    """Generate a random course.
+
+    Possible courses are passed via ``values`` and probabilities via ````
+    probabilities. The values in ``probabilities`` does not have to sum to 1
+    because selections will be made according to the relative weights.
+
+    Parameters
+    ----------
+    values: collections.abc.Sequence
+
+        Courses to choose from.
+
+    probabilities: collections.abc.Sequence
+
+        Probabilities of selecting courses.
+
+    Returns
+    -------
+    str
+
+        Randomly generated course.
+
     """
     return random.choices(values, weights=probabilities, k=1)[0]
 
 
-def country(values=list(util.COUNTRIES), bias=None):
+def country(values=list(pbu.COUNTRIES), bias=None):
     """Generate a random country.
 
     Possible countries are passed via ``values``. If the probability of some
@@ -125,7 +208,7 @@ def name(gender=None, country=None, romanized=True):
         Randomly generated name.
 
     """
-    locale = util.locale(country) if country is not None else None
+    locale = pbu.locale(country) if country is not None else None
     fake = Faker(locale) if locale is not None else Faker()
 
     if romanized and hasattr(fake, "romanized_name"):
@@ -145,57 +228,6 @@ def name(gender=None, country=None, romanized=True):
     # Remove suffixes and prefixes - PhD, words with dots and all caps.
     pattern = r"\b(?:[A-Z]+\b|PhD|Dr\(a\)|,|\w*\.\w*)"
     return re.sub(pattern, "", res).strip()
-
-
-def title(gender=None):
-    """Generate a random title.
-
-    Parameters
-    ----------
-    gender: str
-
-        Person's gender.
-
-    Returns
-    -------
-    str
-
-        Randomly generated title.
-
-    """
-    if gender == "male":
-        return "Mr"
-    elif gender == "female":
-        return random.choice(["Ms", "Mrs"])
-    else:
-        return random.choice(util.TITLES)
-
-
-def course(values=list(util.COURSES.keys()), probabilities=list(util.COURSES.values())):
-    """Generate a random course.
-
-    Possible courses are passed via ``values`` and probabilities via ````
-    probabilities. The values in ``probabilities`` does not have to sum to 1
-    because selections will be made according to the relative weights.
-
-    Parameters
-    ----------
-    values: collections.abc.Sequence
-
-        Courses to choose from.
-
-    probabilities: collections.abc.Sequence
-
-        Probabilities of selecting courses.
-
-    Returns
-    -------
-    str
-
-        Randomly generated course.
-
-    """
-    return random.choices(values, weights=probabilities, k=1)[0]
 
 
 def username(name):
@@ -280,4 +312,4 @@ def tutor():
         Randomly generated tutor.
 
     """
-    return random.choice(util.TUTORS)
+    return random.choice(pbu.TUTORS)

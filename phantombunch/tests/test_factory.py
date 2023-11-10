@@ -1,7 +1,9 @@
 import collections
 import re
+import pytest
 
 import phantombunch as pb
+import phantombunch.util as pbu
 
 UINT_RE = re.compile(r"^[0-9]+$")  # unsigned integer regex
 
@@ -42,34 +44,63 @@ class TestCID:
 
 class TestGender:
     def test_type(self):
+        # Check that gender is a string.
         assert isinstance(pb.gender(), str)
 
     def test_values(self):
-        assert pb.gender() in pb.GENDERS
+        # Check the output is one of the expected ones.
+        assert pb.gender() in pbu.GENDERS
 
-    def test_probabilities(self):
+    def test_probability_certain_outcome(self):
         # Check that the probabilities are respected.
-        probabilities = [0.2, 0.75, 0.05]
-        genders = [pb.gender(probabilities=probabilities) for _ in range(10000)]
-        counts = collections.Counter(genders)
+        assert pb.gender(distribution={"outcome1": 1, "outcome2": 0}) == "outcome1"
+
+    def test_probabilities_uncertain_outcome(self):
+        # Check that the probabilities are respected.
+        distribution = {"male": 0.2, "female": 0.75, "nonbinary": 0.05}
+        counts = collections.Counter(
+            pb.gender(distribution=distribution) for _ in range(1000)
+        )
         assert counts["nonbinary"] < counts["male"] < counts["female"]
 
 
 class TestTitle:
     def test_type(self):
+        # Check that title is a string.
         assert isinstance(pb.title(), str)
 
-    def test_values(self):
-        assert pb.title() in pb.TITLES
+    def test_use_period(self):
+        # Check that the title ends with a period if use_period is True.
+        assert pb.title(use_period=True).endswith(".")
+
+    def test_no_period(self):
+        # Check that the title does not end with a period if use_period is False.
+        assert not pb.title(use_period=False).endswith(".")
+
+    def test_startswith_upper(self):
+        # Check that the title starts with an uppercase M.
+        assert pb.title().startswith("M")
+
+    def test_no_gender(self):
+        # Check that the title is one of the expected ones.
+        assert pb.title() in pbu.TITLES
 
     def test_male(self):
-        assert pb.title(gender="male") == "Mr"
+        # Check that the title is one of the expected ones for a male.
+        assert pb.title(genderval="male") == "Mr"
 
     def test_female(self):
-        assert pb.title(gender="female") in ["Ms", "Mrs"]
+        # Check that the title is one of the expected ones for a female.
+        assert pb.title(genderval="female") in ["Ms", "Mrs", "Miss"]
 
     def test_nonbinary(self):
-        assert pb.title(gender="nonbinary") in pb.TITLES
+        # Check that the title is one of the expected ones for a nonbinary.
+        assert pb.title(genderval="nonbinary") == "Mx"
+
+    def test_wrong_gender(self):
+        # Check the exception is raised.
+        with pytest.raises(ValueError):
+            pb.title(genderval="wrong")
 
 
 class TestCourse:

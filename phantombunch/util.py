@@ -2,11 +2,12 @@ import re
 
 import faker
 import pycountry
+import random
 
 COUNTRIES = [country.name for country in pycountry.countries]
 GENDERS = {"male": 0.49, "female": 0.5, "nonbinary": 0.01}
 COURSES = {"acse": 0.4, "edsml": 0.4, "gems": 0.2}
-TITLES = ["Mr", "Ms", "Mrs"]
+TITLES = ["Mr", "Ms", "Mrs", "Miss", "Mx"]
 TUTORS = [faker.Faker().name() for _ in range(25)]
 
 
@@ -32,6 +33,27 @@ def locale(country):
             return locale
     else:
         return None
+
+
+def discrete_draw(distribution):
+    """Draw a random value from a discrete distribution.
+
+    Parameters
+    ----------
+    distribution: dict
+
+        Dictionary of values and probabilities.
+
+    Returns
+    -------
+    str
+
+        Randomly selected value.
+
+    """
+    values = list(distribution.keys())
+    probabilities = list(distribution.values())
+    return random.choices(values, weights=probabilities, k=1)[0]
 
 
 def valid_email(email):
