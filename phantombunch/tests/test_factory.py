@@ -1,6 +1,7 @@
 import collections
 import re
 
+import numpy as np
 import pytest
 
 import phantombunch as pb
@@ -244,3 +245,41 @@ class TestName:
     def test_romanized(self):
         # Check that the name is not romanized if romanized is False.
         assert not pb.name(country="China", romanized=False).isascii()
+
+
+class TestMark:
+    def test_type(self):
+        # Check that mark is a float.
+        assert isinstance(pb.mark(), float)
+
+    def test_range(self):
+        # Check that the mark is between 0 and 100.
+        assert 0 <= pb.mark(50, 50) <= 100
+
+    def test_fail_probability_1(self):
+        # Check fail_probability is respected.
+        assert pb.mark(fail_probability=1) == 0.0
+
+    def test_fail_probability_0_5(self):
+        # Check fail_probability is respected.
+        marks = np.array([pb.mark(fail_probability=0.5) for _ in range(100)])
+        assert 40 <= len(marks[marks == 0]) <= 60
+
+    def test_fail_probability_0(self):
+        # Check fail_probability is respected.
+        marks = np.array([pb.mark(fail_probability=0) for _ in range(100)])
+        assert len(marks[marks == 0]) == 0
+
+    def test_mean(self):
+        # Check that the mean is as expected.
+        marks = np.array(
+            [pb.mark(mean=65, sd=10, fail_probability=0) for _ in range(100)]
+        )
+        assert 60 <= marks.mean() <= 70
+
+    def test_sd(self):
+        # Check that the standard deviation is as expected.
+        marks = np.array(
+            [pb.mark(mean=65, sd=10, fail_probability=0) for _ in range(100)]
+        )
+        assert 8 <= marks.std() <= 12

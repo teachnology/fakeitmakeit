@@ -1,9 +1,10 @@
-from dataclasses import dataclass
-from faker import Faker
-import phantombunch as pb
 import random
-import pandas as pd
+from dataclasses import dataclass
 
+import pandas as pd
+from faker import Faker
+
+import phantombunch as pb
 
 _fake = Faker()
 
@@ -126,4 +127,54 @@ def cohort(n):
     """
     students = [student() for _ in range(n)]
     data = {col: [getattr(student, col) for student in students] for col in _attributes}
+    return pd.DataFrame(data)
+
+
+def assignment(usernames, mean=65, sd=6, fail_probability=0.02, feedback=True):
+    """Create an assignment DataFrame.
+
+    Parameters
+    ----------
+    usernames: Iterable[str]
+
+        Iterable of usernames.
+
+    mean: float
+
+        Mean mark.
+
+    sd: float
+
+        Standard deviation of marks.
+
+    fail_probability: float
+
+        Probability of failing.
+
+    feedback: bool
+
+        Whether to include feedback.
+
+    Returns
+    -------
+    pandas.DataFrame
+
+        DataFrame of usernames and marks.
+
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.assignment(["johndoe", "janedoe"], feedback=False)  # doctest: +SKIP
+      username  mark
+    0  johndoe  63.0
+    1  janedoe  71.0
+
+    """
+    usernames = list(usernames)
+    marks = [pb.mark(mean, sd, fail_probability) for _ in range(len(usernames))]
+    data = {"username": usernames, "mark": marks}
+
+    if feedback:
+        data["feedback"] = [pb.feedback() for _ in range(len(usernames))]
+
     return pd.DataFrame(data)

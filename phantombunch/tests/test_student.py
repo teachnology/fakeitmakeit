@@ -1,6 +1,8 @@
-import phantombunch as pb
-import pandas as pd
 import collections
+
+import pandas as pd
+
+import phantombunch as pb
 
 
 class TestStudent:
@@ -52,3 +54,35 @@ class TestCohort:
 
         assert set(counts.keys()) <= set(pb.util.GENDERS.keys())
         assert counts["male"] > counts["female"]
+
+
+class TestAssignment:
+    def setup_method(self):
+        # Create a cohort and an assignment with 100 students.
+        self.cohort = pb.cohort(100)
+        self.assignment = pb.assignment(self.cohort["username"], feedback=True)
+
+    def test_type(self):
+        # Check that the output is a DataFrame.
+        assert isinstance(self.assignment, pd.DataFrame)
+
+    def test_columns(self):
+        # Check that the output has the right columns.
+        assert set(self.assignment.columns) == set(["username", "mark", "feedback"])
+
+    def test_username(self):
+        # Check that the usernames are as expected.
+        assert set(self.assignment["username"]) == set(self.cohort["username"])
+
+    def test_mark(self):
+        # Check that the marks are as expected.
+        assert self.assignment["mark"].between(0, 100).all()
+
+    def test_feedback(self):
+        # Check that the feedback is as expected.
+        assert self.assignment["feedback"].str.len().ge(10).all()
+
+    def test_no_feedback(self):
+        # Check that the feedback is as expected.
+        assignment = pb.assignment(self.cohort["username"], feedback=False)
+        assert "feedback" not in assignment.columns
