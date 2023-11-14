@@ -8,33 +8,17 @@ GENDERS = {"male": 0.49, "female": 0.5, "nonbinary": 0.01}
 TITLES = ["Mr", "Ms", "Mrs", "Miss", "Mx"]
 COURSES = {"acse": 0.4, "edsml": 0.4, "gems": 0.2}
 COUNTRIES = {country.name: 1 for country in pycountry.countries}
-TUTORS = [faker.Faker().name() for _ in range(25)]
 
 EMAIL_RE = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
-
-def locale(country):
-    """Return a locale for the given country.
-
-    Parameters
-    ----------
-    country: str
-
-        Country name.
-
-    Returns
-    -------
-    str
-
-        Locale if found, otherwise None.
-
-    """
-    alpha_2 = pycountry.countries.get(name=country).alpha_2
+# Country-locale mapping.
+# Exposed as mapping instead of a function for performance reasons.
+COUNTRY_LOCALE = {}
+for country in COUNTRIES:
     for locale in faker.config.AVAILABLE_LOCALES:
-        if alpha_2 in locale:
-            return locale
-    else:
-        return None
+        if pycountry.countries.get(name=country).alpha_2 in locale:
+            COUNTRY_LOCALE[country] = locale
+            break
 
 
 def discrete_draw(distribution):
@@ -51,6 +35,12 @@ def discrete_draw(distribution):
     str
 
         Randomly selected value.
+
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.discrete_draw({"a": 0.5, "b": 0.5})  # doctest: +SKIP
+    'a'
 
     """
     values = list(distribution.keys())

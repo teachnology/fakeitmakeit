@@ -211,20 +211,36 @@ class TestEmail:
         assert pbu.valid_email(pb.email())
 
 
-class TestTutor:
-    pass
-
 class TestName:
     def test_type(self):
+        # Check that name is a string.
         assert isinstance(pb.name(), str)
 
     def test_space(self):
+        # Check that the name contains a space.
         assert " " in pb.name()
 
     def test_country_gender(self):
-        for _ in range(25):
-            assert isinstance(pb.name(gender=pb.gender(), country=pb.country()), str)
+        # Check that different countries and names are accepted.
+        assert all(
+            isinstance(pb.name(gender=pb.gender(), country=pb.country()), str)
+            for _ in range(25)
+        )
 
     def test_china(self):
+        # Check that Chinese names are generated as expected.
         names = set(" ".join(pb.name(country="China") for _ in range(100)).split())
-        assert len({"Jang", "Jing", "Wei", "Fang", "Lei", "Tao"} & names) > 0
+        assert {"Jang", "Jing", "Wei", "Fang", "Lei", "Tao"} & names
+
+    def test_gender(self):
+        # Check expected female names are in the output.
+        names = set(
+            " ".join(
+                pb.name(gender="female", country="United Kingdom") for _ in range(100)
+            ).split()
+        )
+        assert {"Ellie", "Jill", "Irene", "Jean", "Megan", "Fiona", "Sylvia"} & names
+
+    def test_romanized(self):
+        # Check that the name is not romanized if romanized is False.
+        assert not pb.name(country="China", romanized=False).isascii()
