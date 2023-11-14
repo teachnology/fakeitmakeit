@@ -12,9 +12,14 @@ description = "A Python package for generating random personal data."
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: BSD-3-Clause License",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
     "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
 ]
 dependencies = [
     "faker >= 19.0.0",
@@ -25,8 +30,7 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/marijanbeg/phantombunch"
 
-# [tool.ruff]
-# line-length = 88
+
 
 [tool.ruff.lint]
 # Add the `line-too-long` rule to the enforced rule set. By default, Ruff omits rules that
