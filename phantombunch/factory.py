@@ -70,7 +70,7 @@ def gender(distribution=dict(pbu.GENDERS)) -> str:
     return pbu.discrete_draw(distribution)
 
 
-def title(genderval=None, use_period=False):
+def title(genderval=None, use_period=False) -> str:
     """Generate a random title.
 
     If gender, via ``genderval``, is provided, then the title is generated
@@ -121,7 +121,7 @@ def title(genderval=None, use_period=False):
     return f"{res}." if use_period else res
 
 
-def course(distribution=dict(pbu.COURSES)):
+def course(distribution=dict(pbu.COURSES)) -> str:
     """Generate a random course.
 
     Possible courses and their relative probabilities are passed via

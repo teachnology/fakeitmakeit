@@ -5,9 +5,9 @@ import faker
 import pycountry
 
 GENDERS = {"male": 0.49, "female": 0.5, "nonbinary": 0.01}
+COUNTRIES = {country.name: 1 for country in pycountry.countries}
 TITLES = ["Mr", "Ms", "Mrs", "Miss", "Mx"]
 COURSES = {"acse": 0.4, "edsml": 0.4, "gems": 0.2}
-COUNTRIES = {country.name: 1 for country in pycountry.countries}
 
 EMAIL_RE = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 

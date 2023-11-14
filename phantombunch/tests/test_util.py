@@ -1,7 +1,5 @@
 import numbers
 
-import faker
-
 import phantombunch.util as util
 
 

@@ -1,11 +1,51 @@
 from dataclasses import dataclass
-
+from faker import Faker
 import phantombunch as pb
+import random
+import pandas as pd
+
+
+_fake = Faker()
+
+
+# Distributions, biases, constants.
+_tutors = [_fake.name() for _ in range(25)]
+_genders_distribution = {"male": 0.65, "female": 0.34, "nonbinary": 0.01}
+_course_distribution = {"acse": 0.4, "edsml": 0.4, "gems": 0.2}
+_country_biases = {
+    "China": 1800,
+    "United Kingdom": 250,
+    "India": 150,
+    "United States": 100,
+    "Germany": 100,
+    "France": 100,
+    "Hong Kong": 100,
+    "Spain": 100,
+    "Italy": 100,
+    "Netherlands": 80,
+    "Canada": 80,
+}
+_attributes = [
+    "cid",
+    "username",
+    "github",
+    "course",
+    "title",
+    "first_name",
+    "last_name",
+    "gender",
+    "email",
+    "tutor",
+    "fee_status",
+    "nationality",
+    "enrollment_status",
+    "personal_email",
+]
 
 
 @dataclass
 class Student:
-    """A student."""
+    """A dataclass to be populated in student function."""
 
     cid: str
     gender: str
@@ -24,49 +64,66 @@ class Student:
 
 
 def student():
-    cid = pb.cid()
-    gender = pb.gender(probabilities=[0.65, 0.34, 0.01])
-    nationality = pb.country(
-        bias={
-            "China": 3,
-            "United Kingdom": 0.4,
-            "Germany": 0.2,
-            "India": 0.2,
-            "France": 0.2,
-            "Hong Kong": 0.1,
-            "Spain": 0.1,
-            "Italy": 0.1,
-            "Netherlands": 0.1,
-            "United States": 0.25,
-            "Canada": 0.1,
-        }
-    )
-    full_name = pb.name(gender=gender, country=nationality)
-    first_name = full_name.split()[0]
-    last_name = " ".join(full_name.split()[1:])
-    title = pb.title(gender=gender)
-    course = pb.course()
-    username = pb.username(name=full_name)
-    email = pb.email(domain="imperial.ac.uk")
-    personal_email = pb.email()
-    github = f"{course}-{username}"
-    fee_status = "home" if nationality == "United Kingdom" else "overseas"
-    enrollment_status = "enrolled"
-    tutor = pb.tutor()
+    """Generate a random student.
+
+    Returns
+    -------
+    Student
+
+        A dataclass containing student information.
+
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.student()
+    Student(cid=...)
+    """
+    gender = pb.gender(distribution=_genders_distribution)
+    course = pb.course(distribution=_course_distribution)
+    nationality = pb.country(bias=_country_biases)
+    first_name, *_, last_name = pb.name(gender=gender, country=nationality).split()
+    username = pb.username(nameval=f"{first_name} {last_name}")
 
     return Student(
-        cid=cid,
+        cid=pb.cid(),
         gender=gender,
+        course=course,
         nationality=nationality,
         first_name=first_name,
         last_name=last_name,
-        title=title,
-        course=course,
+        title=pb.title(genderval=gender),
         username=username,
-        email=email,
-        personal_email=personal_email,
-        github=github,
-        fee_status=fee_status,
-        enrollment_status=enrollment_status,
-        tutor=tutor,
+        email=pb.email(domain="imperial.ac.uk"),
+        personal_email=pb.email(),
+        github=f"{course}-{username}",
+        fee_status="home" if nationality == "United Kingdom" else "overseas",
+        enrollment_status="enrolled",
+        tutor=random.choice(_tutors),
     )
+
+
+def cohort(n):
+    """Generate a cohort of students.
+
+    Parameters
+    ----------
+    n: int
+
+        Number of students in the cohort.
+
+    Returns
+    -------
+    pandas.DataFrame
+
+        A dataframe containing student information.
+
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.cohort(100)  # doctest: +SKIP
+    ...
+
+    """
+    students = [student() for _ in range(n)]
+    data = {col: [getattr(student, col) for student in students] for col in _attributes}
+    return pd.DataFrame(data)
