@@ -277,13 +277,14 @@ def valid_fee_status(fee_status):
     """
     return bool(re.match(FEE_STATUS_RE, fee_status))
 
+
 def valid_country(country):
     """Check if country is valid.
-    
+
     Parameters
     ----------
     country: str
-    
+
         Country.
 
     Returns
@@ -301,5 +302,5 @@ def valid_country(country):
     False
 
     """
-    allowed_countries = list(COUNTRIES.keys()) + ['Taiwan', 'Syria', 'Columbia']
+    allowed_countries = list(COUNTRIES.keys()) + ["Taiwan", "Syria", "Columbia"]
     return country in allowed_countries
