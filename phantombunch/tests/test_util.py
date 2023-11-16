@@ -300,6 +300,7 @@ class TestValidFeeStatus:
         [
             ("home", True),  # Valid fee status
             ("overseas", True),  # Valid fee status
+            ("home - elq", True),  # Valid fee status
             ("Home", False),  # Not lowercase
             ("OVERSEAS", False),  # Not lowercase
             ("local", False),  # Not in the list

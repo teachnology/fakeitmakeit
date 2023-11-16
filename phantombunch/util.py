@@ -276,3 +276,30 @@ def valid_fee_status(fee_status):
 
     """
     return bool(re.match(FEE_STATUS_RE, fee_status))
+
+def valid_country(country):
+    """Check if country is valid.
+    
+    Parameters
+    ----------
+    country: str
+    
+        Country.
+
+    Returns
+    -------
+    bool
+
+        True if valid, otherwise False.
+
+    Examples
+    --------
+    >>> import phantombunch as pb
+    >>> pb.valid_country('United Kingdom')
+    True
+    >>> pb.valid_country('United Kingdom1')
+    False
+
+    """
+    allowed_countries = list(COUNTRIES.keys()) + ['Taiwan', 'Syria', 'Columbia']
+    return country in allowed_countries

@@ -3,7 +3,7 @@ from .factory import (cid, country, course, email, feedback, gender, mark,
 from .student import Student, assignment, cohort, student
 from .util import (discrete_draw, valid_cid, valid_course, valid_email,
                    valid_fee_status, valid_gender, valid_name, valid_title,
-                   valid_username)
+                   valid_username, valid_country)
 
 __all__ = [
     "valid_email",
@@ -14,6 +14,7 @@ __all__ = [
     "valid_course",
     "valid_gender",
     "valid_fee_status",
+    "valid_country",
     "discrete_draw",
     "cid",
     "gender",
