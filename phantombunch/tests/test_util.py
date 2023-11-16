@@ -114,9 +114,12 @@ class TestValidEmail:
 class TestValidUsername:
     def test_valid_usernames(self):
         # Test cases with valid usernames
+        assert util.valid_username("s12")  # we allow one letter in username
+        assert util.valid_username("ab12")
         assert util.valid_username("ab123")
         assert util.valid_username("abc1234")
         assert util.valid_username("xy9999")
+        assert util.valid_username("x99999")  # we allow 5 digits in username
 
     def test_invalid_usernames_start_digit(self):
         # Test case with a username starting with a digit
@@ -132,7 +135,7 @@ class TestValidUsername:
 
     def test_invalid_usernames_too_many_digits(self):
         # Test case with too many digits
-        assert not util.valid_username("ab12345")
+        assert not util.valid_username("ab123456")
 
     def test_invalid_usernames_uppercase_letters(self):
         # Test case with uppercase letters
@@ -141,10 +144,6 @@ class TestValidUsername:
     def test_invalid_usernames_special_characters(self):
         # Test case with special characters
         assert not util.valid_username("ab#123")
-
-    def test_invalid_usernames_too_few_letters(self):
-        # Test case with too few letters
-        assert not util.valid_username("a1234")
 
     def test_invalid_usernames_too_many_letters(self):
         # Test case with too many letters
@@ -160,9 +159,10 @@ class TestValidCID:
         # Test valid CIDs that meet all the criteria
         assert util.valid_cid("01234567")
         assert util.valid_cid("02123456")
+        assert util.valid_cid("00123456")  # we allow two leading zeroes
 
     def test_invalid_second_digit(self):
-        # Test CIDs with an invalid second digit (should be 1 or 2)
+        # Test CIDs with an invalid second digit (should be 0, 1, or 2)
         assert not util.valid_cid("03123456")
 
     def test_invalid_length(self):
@@ -198,6 +198,7 @@ class TestValidName:
         # with a capital letter)
         assert util.valid_name("John Smith")
         assert util.valid_name("Jean-Luc Picard")
+        assert util.valid_name("Jean-Luc (Peter) Picard")
 
     def test_valid_hyphenated_names(self):
         # Test valid hyphenated names (names with hyphens, each part starting with a
@@ -229,6 +230,11 @@ class TestValidName:
         assert not util.valid_name("")  # Empty string
         assert not util.valid_name(" John")  # Leading space
         assert not util.valid_name("John ")  # Trailing space
+
+    def test_parenthesis(self):
+        # Test names with parenthesis.
+        assert util.valid_name("John (Daniel) Smith")
+        assert util.valid_name("John (Daniel)")
 
 
 class TestValidTitle:

@@ -11,7 +11,7 @@ import phantombunch.util as pbu
 def cid() -> str:
     """Generate a random 8-digit CID number.
 
-    The first digit is always 0, whereas the second digit is 1 or 2. The
+    The first digit is always 0, whereas the second digit is 1, or 2. The
     remaining 6 digits are randomly generated between 0 and 9.
 
     Returns

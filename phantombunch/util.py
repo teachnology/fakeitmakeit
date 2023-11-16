@@ -10,13 +10,16 @@ TITLES = ["Mr", "Ms", "Mrs", "Miss", "Mx"]
 COURSES = {"acse": 0.4, "edsml": 0.4, "gems": 0.2}
 
 EMAIL_RE = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-USERNAME_RE = r"^[a-z]{2,3}[1-9][0-9]{1,3}$"
-CID_RE = r"^0[12][0-9]{6}$"
-NAME_RE = r"^([A-Z][a-z]*)([-\s][A-Z][a-z]*)*$"
+# We allow 1-3 letters followed by 1-5 numbers.
+USERNAME_RE = r"^[a-z]{1,3}[1-9][0-9]{1,4}$"
+# We allow the second digit to be 0, 1 or 2.
+CID_RE = r"^0[012][0-9]{6}$"
+NAME_RE = r"^([A-Z][a-z]*)([-\s](([A-Z][a-z]*)|\([A-Z][a-z]*\)))*$"
+# We allow Dr as well.
 TITLE_RE = r"^(Mr|Ms|Mrs|Mx|Miss|Dr)$"
 COURSE_RE = r"^(acse|edsml|gems)$"
 GENDER_RE = r"^(male|female|nonbinary)$"
-FEE_STATUS_RE = r"^(home|overseas)$"
+FEE_STATUS_RE = r"^(home|overseas|(home - elq))$"
 
 # Country-locale mapping.
 # Exposed as mapping instead of a function for performance reasons.
