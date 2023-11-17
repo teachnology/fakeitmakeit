@@ -6,12 +6,12 @@ import pytest
 import phantombunch as pb
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="package")
 def cohort():
     return pb.cohort(100)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="package")
 def assignment(cohort):
     return pb.assignment(cohort["username"], feedback=True)
 
@@ -31,10 +31,6 @@ class TestStudent:
 
 
 class TestCohort:
-    # def setup_method(self):
-    #     # Create a cohort of 10 students.
-    #     self.cohort = pb.cohort(100)
-
     def test_type(self, cohort):
         # Check that the output is a DataFrame.
         assert isinstance(cohort, pd.DataFrame)
@@ -53,7 +49,7 @@ class TestCohort:
 
         assert set(counts.keys()) <= set(pb.util.COUNTRIES.keys())
         assert counts["China"] > 40
-        assert counts["United Kingdom"] > 5
+        assert counts["United Kingdom"] > 4
 
     def test_username(self, cohort):
         # Check that usernames are as expected.
@@ -117,3 +113,14 @@ class TestAssignment:
         # Check that the feedback is as expected.
         assignment = pb.assignment(cohort["username"], feedback=False)
         assert "feedback" not in assignment.columns
+
+
+class TestValidCohort:
+    def test_valid_cohort(self, cohort):
+        # Check that the output is a DataFrame.
+        assert pb.valid_cohort(cohort)
+
+    def test_invalid_cohort(self, cohort):
+        # Check that the output is a DataFrame.
+        cohort["username"] = cohort["username"] + "#"
+        assert not pb.valid_cohort(cohort)

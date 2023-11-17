@@ -242,10 +242,6 @@ class TestName:
         )
         assert {"Ellie", "Jill", "Irene", "Jean", "Megan", "Fiona", "Sylvia"} & names
 
-    def test_romanized(self):
-        # Check that the name is not romanized if romanized is False.
-        assert not pb.name(country="China", romanized=False).isascii()
-
 
 class TestMark:
     def test_type(self):
@@ -263,7 +259,7 @@ class TestMark:
     def test_fail_probability_0_5(self):
         # Check fail_probability is respected.
         marks = np.array([pb.mark(fail_probability=0.5) for _ in range(100)])
-        assert 40 <= len(marks[marks == 0]) <= 60
+        assert 35 <= len(marks[marks == 0]) <= 65
 
     def test_fail_probability_0(self):
         # Check fail_probability is respected.

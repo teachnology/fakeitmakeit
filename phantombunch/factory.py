@@ -279,15 +279,13 @@ def email(domain=None):
     return f"{fake.user_name()}@{domain}"
 
 
-def name(gender=None, country=None, romanized=True):
+def name(gender=None, country=None):
     """Generate a random name.
 
-    This function uses Faker to generate a random name. Depending on the
-    ``country`` and ``gender`` parameters, the name is generated according to
-    the locale and by calling the appropriate method from Faker. If
-    ``romanized`` is True, then the romanized version of the name is returned if
-    possible, e.g. Chinese names are returned in English alphabet. Otherwise,
-    the name with the default Faker locale is returned.
+    This function uses Faker to generate a random name. Depending on the ``country`` and
+    ``gender`` parameters, the name is generated according to the locale and by calling
+    the appropriate method from Faker. Otherwise, the name with the default Faker locale
+    is returned.
 
     Parameters
     ----------
@@ -298,12 +296,6 @@ def name(gender=None, country=None, romanized=True):
     country: str
 
         Country of the person.
-
-    romanized: bool
-
-        Whether to return the romanized version of the name. Whether to return
-        only ASCII characters. If impossible for particular gender and country,
-        then the default Faker locale is used.
 
     Returns
     -------
@@ -317,8 +309,6 @@ def name(gender=None, country=None, romanized=True):
     >>> pb.name()  # doctest: +SKIP
     'John Smith'
     >>> pb.name(country='China')  # doctest: +SKIP
-    '张三'
-    >>> pb.name(country='China', romanized=True)  # doctest: +SKIP
     'Zhang San'
     >>> pb.name(gender='female', country='Germany')  # doctest: +SKIP
     'Anna Schmidt'
@@ -328,26 +318,32 @@ def name(gender=None, country=None, romanized=True):
     fake = Faker(locale)
 
     # Romanized is available only for some countries.
-    if romanized and hasattr(fake, "romanized_name"):
-        return fake.romanized_name()
+    if hasattr(fake, "romanized_name"):
+        res = fake.romanized_name()
+    else:
+        # Depending on the gender, we call the appropriate method from Faker.
+        method = f"name_{gender}" if gender is not None else "name"
 
-    # Depending on the gender, we call the appropriate method from Faker.
-    method = f"name_{gender}" if gender is not None else "name"
+        # Not all countries have names for different genders.
+        try:
+            res = getattr(fake, method)()
+        except AttributeError:
+            res = fake.name()
 
-    # Not all countries have names for different genders.
-    try:
-        res = getattr(fake, method)()
-    except AttributeError:
-        res = fake.name()
+        # Remove suffixes and prefixes - Mr, PhD, words with dots and all caps.
+        # This is not exhaustive and some names might still contain some of these.
+        pattern = r"\b(?:[A-Z]+\b|PhD|Dr\(a\)|,|Dr|Mr|Mrs|Ms|Miss|\w*\.\w*)"
+        res = re.sub(pattern, "", res).strip()
 
-    if romanized and not res.isascii():
-        res = getattr(Faker(), method)()
+    if pbu.valid_name(res):
+        return res
+    else:
+        # If the name is not valid, then we generate a new one with default faker until
+        # it passes validation.
+        while not pbu.valid_name(res):
+            res = Faker().name()
 
-    # Remove suffixes and prefixes - Mr, PhD, words with dots and all caps.
-    # This is not exhaustive and some names might still contain some of these.
-    pattern = r"\b(?:[A-Z]+\b|PhD|Dr\(a\)|,|Dr|Mr|Mrs|Ms|Miss|\w*\.\w*)"
-
-    return re.sub(pattern, "", res).strip()
+        return res
 
 
 def mark(mean=65, sd=6, fail_probability=0.02):

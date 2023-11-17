@@ -304,3 +304,37 @@ def valid_country(country):
     """
     allowed_countries = list(COUNTRIES.keys()) + ["Taiwan", "Syria", "Columbia"]
     return country in allowed_countries
+
+
+def valid_cohort(cohort):
+    """Check if cohort is valid.
+
+    Parameters
+    ----------
+    cohort: DataFrame
+
+            Cohort.
+
+    Returns
+    -------
+    bool
+
+        True if valid, otherwise False.
+
+    """
+    for col in cohort.columns:
+        if col != "username" and ("name" in col or col == "tutor"):
+            data = "name"
+        elif "email" in col:
+            data = "email"
+        elif col in ["github", "enrollment_status"]:
+            continue
+        elif col == "nationality":
+            data = "country"
+        else:
+            data = col
+        validation_function = globals()[f"valid_{data}"]
+        if not cohort[col].map(validation_function).all():
+            return False
+    else:
+        return True

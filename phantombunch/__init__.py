@@ -1,28 +1,9 @@
-from .factory import (
-    cid,
-    country,
-    course,
-    email,
-    feedback,
-    gender,
-    mark,
-    name,
-    title,
-    username,
-)
+from .factory import (cid, country, course, email, feedback, gender, mark,
+                      name, title, username)
 from .student import Student, assignment, cohort, student
-from .util import (
-    discrete_draw,
-    valid_cid,
-    valid_course,
-    valid_email,
-    valid_fee_status,
-    valid_gender,
-    valid_name,
-    valid_title,
-    valid_username,
-    valid_country,
-)
+from .util import (discrete_draw, valid_cid, valid_cohort, valid_country,
+                   valid_course, valid_email, valid_fee_status, valid_gender,
+                   valid_name, valid_title, valid_username)
 
 __all__ = [
     "valid_email",
@@ -34,6 +15,7 @@ __all__ = [
     "valid_gender",
     "valid_fee_status",
     "valid_country",
+    "valid_cohort",
     "discrete_draw",
     "cid",
     "gender",
