@@ -5,7 +5,6 @@ import pandas as pd
 
 import phantombunch as pb
 
-
 # Distributions, biases, constants.
 _tutors = [pb.name() for _ in range(25)]
 _genders_distribution = {"male": 0.65, "female": 0.34, "nonbinary": 0.01}
