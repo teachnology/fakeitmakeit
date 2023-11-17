@@ -39,6 +39,7 @@ dependencies = [
 extend-select = [
     "E501",  # line-too-long 
     "UP",  # pyupgrade
+    # "I",  # isort?????
     # "D",  # pydocstyle
     ]
 
