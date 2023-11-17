@@ -2,20 +2,17 @@ import random
 from dataclasses import dataclass
 
 import pandas as pd
-from faker import Faker
 
 import phantombunch as pb
 
-_fake = Faker()
-
 
 # Distributions, biases, constants.
-_tutors = [_fake.name() for _ in range(25)]
+_tutors = [pb.name() for _ in range(25)]
 _genders_distribution = {"male": 0.65, "female": 0.34, "nonbinary": 0.01}
 _course_distribution = {"acse": 0.4, "edsml": 0.4, "gems": 0.2}
 _country_biases = {
     "China": 1800,
-    "United Kingdom": 250,
+    "United Kingdom": 350,
     "India": 150,
     "United States": 100,
     "Germany": 100,

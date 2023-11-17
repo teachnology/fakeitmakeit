@@ -335,6 +335,7 @@ def valid_cohort(cohort):
             data = col
         validation_function = globals()[f"valid_{data}"]
         if not cohort[col].map(validation_function).all():
+            print(col, validation_function, "fail")
             return False
     else:
         return True
