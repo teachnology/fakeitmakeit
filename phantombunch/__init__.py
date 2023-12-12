@@ -23,6 +23,8 @@ from .util import (
     valid_name,
     valid_title,
     valid_username,
+    valid_mark,
+    valid_assignment,
 )
 
 __all__ = [
@@ -36,6 +38,8 @@ __all__ = [
     "valid_fee_status",
     "valid_country",
     "valid_cohort",
+    "valid_mark",
+    "valid_assignment",
     "discrete_draw",
     "cid",
     "gender",
