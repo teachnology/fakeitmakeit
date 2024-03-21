@@ -1,14 +1,9 @@
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[project]
+[tool.poetry]
 name = "phantombunch"
-version = "2023.11.0"
-authors = [{ name = "Marijan Beg", email = "m.beg@imperial.ac.uk" }]
-description = "A Python package for generating random personal data."
+version = "2024.03.0"
+description = "Python package for generating fake student data."
+authors = ["Marijan Beg"]
 readme = "README.md"
-requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Education",
@@ -19,10 +14,19 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = ["faker >= 19.0.0", "pycountry >= 22.3.5", "pandas >= 2.0.0"]
 
-[project.urls]
-"Homepage" = "https://github.com/marijanbeg/phantombunch"
+[tool.poetry.dependencies]
+python = ">=3.10"
+pandas = "^2.2.1"
+Faker = "^24.3.0"
+pycountry = "^23.12.11"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.ruff.lint]
 # Add the `line-too-long` rule to the enforced rule set. By default, Ruff omits rules
