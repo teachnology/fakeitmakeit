@@ -22,7 +22,7 @@ jobs:
         run: python -c "import sys; print(sys.version)"
 
       - name: Install
-        run: poetry install --no-interaction
+        run: poetry install
 
       - name: Test with pytest
         run: pytest
