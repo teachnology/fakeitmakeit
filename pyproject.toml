@@ -5,9 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "phantombunch"
 version = "2023.11.0"
-authors = [
-  { name="Marijan Beg", email="m.beg@imperial.ac.uk" },
-]
+authors = [{ name = "Marijan Beg", email = "m.beg@imperial.ac.uk" }]
 description = "A Python package for generating random personal data."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -21,35 +19,34 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = [
-    "faker >= 19.0.0",
-    "pycountry >= 22.3.5",
-    "pandas >= 2.0.0",
-]
+dependencies = ["faker >= 19.0.0", "pycountry >= 22.3.5", "pandas >= 2.0.0"]
 
 [project.urls]
 "Homepage" = "https://github.com/marijanbeg/phantombunch"
 
-
-
 [tool.ruff.lint]
-# Add the `line-too-long` rule to the enforced rule set. By default, Ruff omits rules that
-# overlap with the use of a formatter, like Black, but we can override this behavior by
-# explicitly adding the rule.
+# Add the `line-too-long` rule to the enforced rule set. By default, Ruff omits rules
+# that overlap with the use of a formatter.
 extend-select = [
-    "E501",  # line-too-long 
-    "UP",  # pyupgrade
-    # "I",  # isort?????
-    # "D",  # pydocstyle
-    ]
+    "E501", # line-too-long 
+    "UP",   # pyupgrade
+    "I",    # isort
+    "D",    # pydocstyle
+]
+ignore = [
+    "D100", # Missing docstring in public module
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
- 
+
+[tool.ruff.lint.per-file-ignores]
+# Ignore pydocstyle tests for some files.
+"__init__.py" = ["D"]
+"phantombunch/tests/*" = ["D"]
+
 [tool.coverage.run]
-omit = [
-    "phantombunch/tests/*.py",
-    ]
+omit = ["phantombunch/tests/*.py"]
 
 [tool.pytest.ini_options]
 addopts = "-v --doctest-modules --junitxml=junit/test-results.xml --cov=phantombunch --cov-report=xml --cov-report=html"

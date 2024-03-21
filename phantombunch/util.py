@@ -1,8 +1,8 @@
 import random
 import re
-import pandas as pd
 
 import faker
+import pandas as pd
 import pycountry
 
 GENDERS = {"male": 0.49, "female": 0.5, "nonbinary": 0.01}
@@ -303,7 +303,12 @@ def valid_country(country):
     False
 
     """
-    allowed_countries = list(COUNTRIES.keys()) + ["Taiwan", "Syria", "Columbia", "Turkey"]
+    allowed_countries = list(COUNTRIES.keys()) + [
+        "Taiwan",
+        "Syria",
+        "Columbia",
+        "Turkey",
+    ]
     return country in allowed_countries
 
 
@@ -324,6 +329,7 @@ def valid_mark(mark):
 
     """
     return 0 <= mark <= 100
+
 
 def valid_cohort(cohort):
     """Check if cohort is valid.
@@ -358,7 +364,7 @@ def valid_cohort(cohort):
             return False
     else:
         return True
-    
+
 
 def valid_assignment(assignment, cohort=None, exclude_usernames=None):
     """Check if assignment is valid.
@@ -366,7 +372,7 @@ def valid_assignment(assignment, cohort=None, exclude_usernames=None):
     Parameters
     ----------
     assignment: DataFrame
-    
+
         Assignment.
 
     Returns
@@ -378,13 +384,13 @@ def valid_assignment(assignment, cohort=None, exclude_usernames=None):
     """
     if not isinstance(cohort, pd.DataFrame):
         # Enforce CID to be read as a string.
-        cohort = pd.read_csv(cohort, dtype={'cid': str})
-    
+        cohort = pd.read_csv(cohort, dtype={"cid": str})
+
     if not valid_cohort(cohort):
         raise ValueError("Invalid cohort.")
 
     if not set(assignment.columns) <= {"username", "mark", "feedback"}:
-        print(f'Wrong column names {assignment.columns=}')
+        print(f"Wrong column names {assignment.columns=}")
         return False
     elif not assignment["username"].map(valid_username).all():
         for username in assignment["username"]:
@@ -399,7 +405,9 @@ def valid_assignment(assignment, cohort=None, exclude_usernames=None):
     elif cohort is not None:
         exclude_usernames = exclude_usernames or []
         # Check that the usernames are as expected.
-        if not (set(assignment["username"]) - set(exclude_usernames)) <= set(cohort["username"]):
+        if not (set(assignment["username"]) - set(exclude_usernames)) <= set(
+            cohort["username"]
+        ):
             for username in set(assignment["username"]) - set(exclude_usernames):
                 if username not in set(cohort["username"]):
                     print(username, "not in cohort")
@@ -409,4 +417,3 @@ def valid_assignment(assignment, cohort=None, exclude_usernames=None):
         return False
 
     return True
-        

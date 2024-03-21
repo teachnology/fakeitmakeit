@@ -13,6 +13,7 @@ from .factory import (
 from .student import Student, assignment, cohort, student
 from .util import (
     discrete_draw,
+    valid_assignment,
     valid_cid,
     valid_cohort,
     valid_country,
@@ -20,11 +21,10 @@ from .util import (
     valid_email,
     valid_fee_status,
     valid_gender,
+    valid_mark,
     valid_name,
     valid_title,
     valid_username,
-    valid_mark,
-    valid_assignment,
 )
 
 __all__ = [
