@@ -1,18 +1,20 @@
 [tool.poetry]
 name = "phantombunch"
-version = "2024.03.0"
+version = "2024.3.0"
 description = "Python package for generating fake student data."
-authors = ["Marijan Beg"]
+license = "BSD-3-Clause"
+authors = [
+    "Marijan Beg <m.beg@imperial.ac.uk>",
+]
 readme = "README.md"
+repository = "https://github.com/marijanbeg/phantombunch"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Education",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: BSD License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3 :: Only",
 ]
 
 [tool.poetry.dependencies]
@@ -23,6 +25,7 @@ pycountry = "^23.12.11"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"
+pytest-cov = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]
