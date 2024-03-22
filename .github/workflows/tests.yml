@@ -16,7 +16,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install Poetry
-        uses: snok/install-poetry@v1
+        uses: pipx install poetry
 
       - name: Install
         run: poetry install --no-interaction
