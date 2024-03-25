@@ -1,13 +1,11 @@
 [tool.poetry]
-name = "phantombunch"
+name = "fakeitmakeit"
 version = "2024.3.0"
 description = "Python package for generating fake student data."
 license = "BSD-3-Clause"
-authors = [
-    "Marijan Beg <m.beg@imperial.ac.uk>",
-]
+authors = ["Marijan Beg <m.beg@imperial.ac.uk>"]
 readme = "README.md"
-repository = "https://github.com/marijanbeg/phantombunch"
+repository = "https://github.com/marijanbeg/fakeitmakeit"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Education",
@@ -32,13 +30,10 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff.lint]
-# Add the `line-too-long` rule to the enforced rule set. By default, Ruff omits rules
-# that overlap with the use of a formatter.
 extend-select = [
-    "E501", # line-too-long 
-    "UP",   # pyupgrade
-    "I",    # isort
-    "D",    # pydocstyle
+    "UP", # pyupgrade
+    "I",  # isort
+    "D",  # pydocstyle
 ]
 ignore = [
     "D100", # Missing docstring in public module
@@ -50,10 +45,10 @@ convention = "numpy"
 [tool.ruff.lint.per-file-ignores]
 # Ignore pydocstyle tests for some files.
 "__init__.py" = ["D"]
-"phantombunch/tests/*" = ["D"]
+"fakeitmakeit/tests/*" = ["D"]
 
 [tool.coverage.run]
-omit = ["phantombunch/tests/*.py"]
+omit = ["fakeitmakeit/tests/*.py"]
 
 [tool.pytest.ini_options]
-addopts = "-v --doctest-modules --junitxml=junit/test-results.xml --cov=phantombunch --cov-report=xml --cov-report=html"
+addopts = "-v --doctest-modules --junitxml=junit/test-results.xml --cov=fakeitmakeit --cov-report=xml --cov-report=html"
