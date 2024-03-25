@@ -1,6 +1,5 @@
-import pytest
-
 import phantombunch as pb
+import pytest
 
 
 class TestEmail:

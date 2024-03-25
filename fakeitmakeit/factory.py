@@ -5,11 +5,10 @@ from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
+import fakeitmakeit as pb
+import fakeitmakeit.isvalid as pbiv
+import fakeitmakeit.util as pbu
 from faker import Faker
-
-import phantombunch as pb
-import phantombunch.isvalid as pbiv
-import phantombunch.util as pbu
 
 
 def cid() -> str:

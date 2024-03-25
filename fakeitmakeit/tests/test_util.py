@@ -1,96 +1,111 @@
 import numbers
 
-import phantombunch.util as util
+import fakeitmakeit as fm
 
 
 class TestGENDERS:
     def test_type(self):
         # Check that GENDERS is a dictionary.
-        assert isinstance(util.GENDERS, dict)
+        assert isinstance(fm.util.GENDERS, dict)
 
     def test_length(self):
         # Check there are 3 genders.
-        assert len(util.GENDERS) == 3
+        assert len(fm.util.GENDERS) == 3
 
     def test_keys(self):
         # Check that the keys are genders.
-        assert "male" in util.GENDERS
+        assert "male" in fm.util.GENDERS
 
     def test_values(self):
         # Check that the values are all numbers.
-        assert all(isinstance(value, numbers.Real) for value in util.GENDERS.values())
-
-
-class TestCOUNTRIES:
-    def test_type(self):
-        # Check that COUNTRIES is a dictionary.
-        assert isinstance(util.COUNTRIES, dict)
-
-    def test_length(self):
-        # Check that COUNTRIES has sufficient items.
-        assert len(util.COUNTRIES) >= 245
-
-    def test_keys(self):
-        # Check that the keys are country names.
-        assert "Serbia" in util.COUNTRIES
-        assert "Germany" in util.COUNTRIES
-
-    def test_values(self):
-        # Check that the values are all 1 (relative probabilities).
-        assert all(isinstance(value, numbers.Real) for value in util.COUNTRIES.values())
-
-
-class TestCOURSES:
-    def test_type(self):
-        # Check that COURSES is a dictionary.
-        assert isinstance(util.COURSES, dict)
-
-    def test_keys(self):
-        # Check that the keys are course names.
-        assert "acse" in util.COURSES
-        assert "edsml" in util.COURSES
-        assert "gems" in util.COURSES
-
-    def test_values(self):
-        # Check that the values are all numbers.
-        assert all(isinstance(value, numbers.Real) for value in util.COURSES.values())
+        assert all(isinstance(value, numbers.Real) for value in fm.util.GENDERS.values())
 
 
 class TestTITLES:
     def test_type(self):
         # Check that TITLES is a set.
-        assert isinstance(util.TITLES, set)
+        assert isinstance(fm.util.TITLES, set)
 
     def test_length(self):
         # Check that TITLES has 5 titles.
-        assert len(util.TITLES) == 5
+        assert len(fm.util.TITLES) == 5
+
+    def test_elements(self):
+        # Check correct elements are in the set.
+        assert "Mr" in fm.util.TITLES
 
     def test_values(self):
         # Check that the values are all strings.
-        assert all(isinstance(value, str) for value in util.TITLES)
+        assert all(isinstance(value, str) for value in fm.util.TITLES)
+
+class TestCOURSES:
+    def test_type(self):
+        # Check that COURSES is a dictionary.
+        assert isinstance(fm.util.COURSES, dict)
+
+    def test_length(self):
+        # Check that COURSES has 3 courses.
+        assert len(fm.util.COURSES) == 3
+
+    def test_keys(self):
+        # Check that the keys are course names.
+        assert {"acse", "edsml", "gems"} <= set(fm.util.COURSES.keys())
+
+    def test_values(self):
+        # Check that the values are all numbers.
+        assert all(isinstance(value, numbers.Real) for value in fm.util.COURSES.values())
+
+
+
+
+class TestCOUNTRIES:
+    def test_type(self):
+        # Check that COUNTRIES is a dictionary.
+        assert isinstance(fm.util.COUNTRIES, dict)
+
+    def test_length(self):
+        # Check that COUNTRIES has sufficient items.
+        assert len(fm.util.COUNTRIES) >= 245
+
+    def test_keys(self):
+        # Check that the keys are country names.
+        assert {"Serbia", "Malta"} <  set(fm.util.COUNTRIES.keys())
+
+    def test_values(self):
+        # Check that the values are all 1 (relative probabilities).
+        assert all(isinstance(value, numbers.Real) for value in fm.util.COUNTRIES.values())
+
+
 
 
 class TestCOUNTRY_LOCALE:
     def test_type(self):
         # Check that COUNTRY_LOCALE is a dictionary.
-        assert isinstance(util.COUNTRY_LOCALE, dict)
+        assert isinstance(fm.util.COUNTRY_LOCALE, dict)
+
+    def test_length(self):
+        # Check that COUNTRY_LOCALE has sufficient items.
+        assert len(fm.util.COUNTRY_LOCALE) >= 10
 
     def test_keys(self):
         # Check that the keys are country names.
-        assert "Argentina" in util.COUNTRY_LOCALE
-        assert "United States" in util.COUNTRY_LOCALE
+        assert {"Argentina", "United States"} < set(fm.util.COUNTRY_LOCALE.keys())
 
     def test_values(self):
         # Check that the values contain an underscore.
-        assert all("_" in value for value in util.COUNTRY_LOCALE.values())
+        assert all("_" in value for value in fm.util.COUNTRY_LOCALE.values())
 
     def test_entries(self):
         # Check that the entries are valid locales.
-        assert util.COUNTRY_LOCALE["China"] == "zh_CN"
-        assert util.COUNTRY_LOCALE["United Kingdom"] == "en_GB"
+        assert fm.util.COUNTRY_LOCALE["China"] == "zh_CN"
+        assert fm.util.COUNTRY_LOCALE["United Kingdom"] == "en_GB"
 
 
 class TestDiscreteDraw:
     def test_output(self):
         # Check that the output is one of the expected ones.
-        assert util.discrete_draw({"a": 0.5, "b": 0.5}) in {"a", "b"}
+        assert fm.util.discrete_draw({"a": 0.5, "b": 0.5}) in {"a", "b"}
+
+    def test_certain(self):
+        # Check that the output is always the same if probability is 1.
+        assert fm.util.discrete_draw({"a": 0, "b": 1}) == "b"

@@ -27,7 +27,7 @@ def discrete_draw(distribution):
     ----------
     distribution: dict
 
-        Dictionary with values and their probabilities.
+        Dictionary with keys being possible outputs and values their probabilities.
 
     Returns
     -------

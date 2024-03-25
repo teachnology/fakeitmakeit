@@ -1,8 +1,7 @@
 import re
 
 import pandas as pd
-
-import phantombunch.util as pbu
+import fakeitmakeit.util as pbu
 
 EMAIL_RE = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 # We allow 1-3 lowercase letters followed by 1-5 numbers. First number is never zero.
