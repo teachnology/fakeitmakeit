@@ -18,7 +18,9 @@ class TestGENDERS:
 
     def test_values(self):
         # Check that the values are all numbers.
-        assert all(isinstance(value, numbers.Real) for value in fm.util.GENDERS.values())
+        assert all(
+            isinstance(value, numbers.Real) for value in fm.util.GENDERS.values()
+        )
 
 
 class TestTITLES:
@@ -38,6 +40,7 @@ class TestTITLES:
         # Check that the values are all strings.
         assert all(isinstance(value, str) for value in fm.util.TITLES)
 
+
 class TestCOURSES:
     def test_type(self):
         # Check that COURSES is a dictionary.
@@ -53,9 +56,9 @@ class TestCOURSES:
 
     def test_values(self):
         # Check that the values are all numbers.
-        assert all(isinstance(value, numbers.Real) for value in fm.util.COURSES.values())
-
-
+        assert all(
+            isinstance(value, numbers.Real) for value in fm.util.COURSES.values()
+        )
 
 
 class TestCOUNTRIES:
@@ -69,13 +72,13 @@ class TestCOUNTRIES:
 
     def test_keys(self):
         # Check that the keys are country names.
-        assert {"Serbia", "Malta"} <  set(fm.util.COUNTRIES.keys())
+        assert {"Serbia", "Malta"} < set(fm.util.COUNTRIES.keys())
 
     def test_values(self):
         # Check that the values are all 1 (relative probabilities).
-        assert all(isinstance(value, numbers.Real) for value in fm.util.COUNTRIES.values())
-
-
+        assert all(
+            isinstance(value, numbers.Real) for value in fm.util.COUNTRIES.values()
+        )
 
 
 class TestCOUNTRY_LOCALE:

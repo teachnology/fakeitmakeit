@@ -1,19 +1,10 @@
 import re
 
 import pandas as pd
-import fakeitmakeit.util as pbu
 
-EMAIL_RE = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-# We allow 1-3 lowercase letters followed by 1-5 numbers. First number is never zero.
-USERNAME_RE = r"^[a-z]{1,3}[1-9][0-9]{1,4}$"
-# We allow the second digit to be 0, 1 or 2.
-CID_RE = r"^0[012][0-9]{6}$"
-NAME_RE = r"^([A-Z][a-z]*)([-\s](([A-Z][a-z]*)|\([A-Z][a-z]*\)))*$"
-# We allow Dr as well.
-TITLE_RE = r"^(Mr|Ms|Mrs|Mx|Miss|Dr)$"
-COURSE_RE = r"^(acse|edsml|gems)$"
-GENDER_RE = r"^(male|female|nonbinary)$"
-FEE_STATUS_RE = r"^(home|overseas|(home - elq))$"
+import numbers
+
+import fakeitmakeit.util as fmu
 
 
 def email(value):
@@ -33,13 +24,14 @@ def email(value):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.isvalid.email('nikola.tesla@gmail.com')
+    >>> import fakeitmakeit as fm
+    >>> fm.isvalid.email('nikola.tesla@gmail.com')
     True
-    >>> pb.isvalid.email('nikola.tesla(at)gmail')
+    >>> fm.isvalid.email('nikola.tesla(at)gmail')
     False
 
     """
+    EMAIL_RE = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     return bool(re.match(EMAIL_RE, value))
 
 
@@ -60,13 +52,15 @@ def username(value):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.isvalid.username('johndoe')
+    >>> import fakeitmakeit as fm
+    >>> fm.isvalid.username('johndoe')
     False
-    >>> pb.isvalid.username('abc1234')
+    >>> fm.isvalid.username('abc1234')
     True
 
     """
+    # We allow 1-3 lowercase letters followed by 1-5 numbers - first number is never 0.
+    USERNAME_RE = r"^[a-z]{1,3}[1-9][0-9]{1,4}$"
     return bool(re.match(USERNAME_RE, value))
 
 
@@ -87,13 +81,15 @@ def cid(value):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.isvalid.cid('01234567')
+    >>> import fakeitmakeit as fm
+    >>> fm.isvalid.cid('01234567')
     True
-    >>> pb.isvalid.cid('012345678')  # 9 digits
+    >>> fm.isvalid.cid('012345678')  # 9 digits
     False
 
     """
+    # We allow the second digit to be 0, 1, or 2.
+    CID_RE = r"^0[012][0-9]{6}$"
     return bool(re.match(CID_RE, value))
 
 
@@ -114,17 +110,18 @@ def name(value):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.isvalid.name('Albert Einstein')
+    >>> import fakeitmakeit as fm
+    >>> fm.isvalid.name('Albert Einstein')
     True
-    >>> pb.isvalid.name('Albert')
+    >>> fm.isvalid.name('Albert')
     True
-    >>> pb.isvalid.name('john')
+    >>> fm.isvalid.name('john')
     False
-    >>> pb.isvalid.name('Nikola_Tesla')
+    >>> fm.isvalid.name('Nikola_Tesla')
     False
 
     """
+    NAME_RE = r"^([A-Z][a-z]*)([-\s](([A-Z][a-z]*)|\([A-Z][a-z]*\)))*$"
     return bool(re.match(NAME_RE, value))
 
 
@@ -145,15 +142,16 @@ def title(value):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.isvalid.title('Mr')
+    >>> import fakeitmakeit as fm
+    >>> fm.isvalid.title('Mr')
     True
-    >>> pb.isvalid.title('mr')
+    >>> fm.isvalid.title('mr')
     False
-    >>> pb.isvalid.title('Herr')
+    >>> fm.isvalid.title('Herr')
     False
 
     """
+    TITLE_RE = r"^(Mr|Ms|Mrs|Mx|Miss|Dr)$"
     return bool(re.match(TITLE_RE, value))
 
 
@@ -174,13 +172,14 @@ def course(value):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.isvalid.course('acse')
+    >>> import fakeitmakeit as fm
+    >>> fm.isvalid.course('acse')
     True
-    >>> pb.isvalid.course('a_very_cool_course')
+    >>> fm.isvalid.course('a_very_cool_course')
     False
 
     """
+    COURSE_RE = r"^(acse|edsml|gems)$"
     return bool(re.match(COURSE_RE, value))
 
 
@@ -201,13 +200,14 @@ def gender(value):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.isvalid.gender('female')
+    >>> import fakeitmakeit as fm
+    >>> fm.isvalid.gender('female')
     True
-    >>> pb.isvalid.gender('Female')
+    >>> fm.isvalid.gender('Female')
     False
 
     """
+    GENDER_RE = r"^(male|female|nonbinary)$"
     return bool(re.match(GENDER_RE, value))
 
 
@@ -228,15 +228,16 @@ def fee_status(value):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.isvalid.fee_status('home')
+    >>> import fakeitmakeit as fm
+    >>> fm.isvalid.fee_status('home')
     True
-    >>> pb.isvalid.fee_status('overseas')
+    >>> fm.isvalid.fee_status('overseas')
     True
-    >>> pb.isvalid.fee_status('home1')
+    >>> fm.isvalid.fee_status('home1')
     False
 
     """
+    FEE_STATUS_RE = r"^(home|overseas|(home - elq))$"
     return bool(re.match(FEE_STATUS_RE, value))
 
 
@@ -257,14 +258,14 @@ def country(value):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.isvalid.country('United Kingdom')
+    >>> import fakeitmakeit as fm
+    >>> fm.isvalid.country('United Kingdom')
     True
-    >>> pb.isvalid.country('Neverland')
+    >>> fm.isvalid.country('Neverland')
     False
 
     """
-    allowed_countries = set(pbu.COUNTRIES.keys()) | {
+    allowed_countries = set(fmu.COUNTRIES.keys()) | {
         "Taiwan",
         "Syria",
         "Columbia",
@@ -290,16 +291,16 @@ def mark(value):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.isvalid.mark(100)
+    >>> import fakeitmakeit as fm
+    >>> fm.isvalid.mark(100)
     True
-    >>> pb.isvalid.mark(101)
+    >>> fm.isvalid.mark(101)
     False
-    >>> pb.isvalid.mark(-1)
+    >>> fm.isvalid.mark(-1)
     False
 
     """
-    return 0 <= value <= 100
+    return isinstance(value, numbers.Real) and (0 <= value <= 100)
 
 
 def cohort(value):

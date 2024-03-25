@@ -37,8 +37,8 @@ def discrete_draw(distribution):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.discrete_draw({"a": 0.5, "b": 0.5})  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.util.discrete_draw({"a": 0.5, "b": 0.5})  # doctest: +SKIP
     'a'
 
     """
