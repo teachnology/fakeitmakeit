@@ -3,9 +3,10 @@ import re
 
 import numpy as np
 import pandas as pd
+import pytest
+
 import phantombunch as pb
 import phantombunch.util as pbu
-import pytest
 
 UINT_RE = re.compile(r"^[0-9]+$")  # unsigned integer regex
 

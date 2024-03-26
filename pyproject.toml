@@ -32,9 +32,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff.lint]
 extend-select = [
-    "UP", # pyupgrade
-    "I",  # isort
-    "D",  # pydocstyle
+    "E501", # line too long - not enabled by default
+    "UP",   # pyupgrade
+    "I",    # isort
+    "D",    # pydocstyle
 ]
 ignore = [
     "D100", # Missing docstring in public module

@@ -1,8 +1,6 @@
-import re
-
-import pandas as pd
-
+import logging
 import numbers
+import re
 
 import fakeitmakeit.util as fmu
 
@@ -303,6 +301,88 @@ def mark(value):
     return isinstance(value, numbers.Real) and (0 <= value <= 100)
 
 
+def assignment(value, valid_usernames=None):
+    """Check if ``value`` is a valid assignment.
+
+    Parameters
+    ----------
+    value: pd.DataFrame
+
+        Assignment.
+
+    Returns
+    -------
+    bool
+
+        ``True`` if valid, otherwise ``False``.
+
+    Examples
+    --------
+    >>> import fakeitmakeit as fm
+    >>> import pandas as pd
+    >>> value = pd.DataFrame({
+    ...     "username": ["abc123", "sw4321"],
+    ...     "mark": [50.1, 70],
+    ...     "feedback": ["feedback 1", "feedback 2"]
+    ... })
+    >>> value = value.set_index("username")
+    >>> fm.isvalid.assignment(value)
+    True
+
+    """
+    if valid_usernames is not None and not all(map(username, valid_usernames)):
+        invalid = [u for u in valid_usernames if not username(u)]
+        logging.error(f"Invalid usernames in valid_usernames: {invalid}")
+        raise ValueError("Invalid username(s) in valid_username.")
+
+    # Check that indicies are valid usernames.
+    if not value.index.map(username).all():
+        invalid = value.index[~value.index.map(username)]
+        logging.warning(f"Invalid usernames: {invalid.tolist()}")
+        return False
+
+    # Check the index name.
+    if value.index.name != "username":
+        logging.warning(
+            f"Invalid index name {value.index.name} - it must be 'username'."
+        )
+        return False
+
+    # Check if there are any repeated usernames.
+    if not value.index.is_unique:
+        invalid = value.index[value.index.duplicated()]
+        logging.warning(f"There are duplicate usernames: {invalid.tolist()}.")
+        return False
+
+    # Check if the columns are as expected.
+    if not set(value.columns) <= {"mark", "feedback"}:
+        logging.warning(
+            f"Invalid column names {set(value.columns) - {'mark', 'feedback'}}."
+        )
+        return False
+
+    # Check the marks column.
+    if not value["mark"].map(mark).all():
+        logging.warning(
+            f"Invalid marks: {value['mark'][~value['mark'].map(mark)].tolist()}."
+        )
+        return False
+
+    # Check the feedback column.
+    if not (value["feedback"].map(type) == str).all():
+        invalid = value["feedback"][~value["feedback"].map(type) == str]
+        logging.warning(f"Invalid feedback: {invalid.tolist()}.")
+        return False
+
+    if valid_usernames is not None:
+        if not (set(value.index) <= set(valid_usernames)):
+            invalid = set(value.index) - set(valid_usernames)
+            logging.warning(f"Invalid usernames in value.index: {invalid}.")
+            return False
+
+    return True
+
+
 def cohort(value):
     """Check if ``value`` is a valid cohort.
 
@@ -319,76 +399,40 @@ def cohort(value):
         ``True`` if valid, otherwise ``False``.
 
     """
-    for col in value.columns:
-        if col != "username" and ("name" in col or col == "tutor"):
+    # Check that indicies are valid usernames.
+    if not value.index.map(username).all():
+        invalid = value.index[~value.index.map(username)]
+        logging.warning(f"Invalid usernames: {invalid.tolist()}")
+        return False
+
+    # Check the index name.
+    if value.index.name != "username":
+        logging.warning(
+            f"Invalid index name {value.index.name} - it must be 'username'."
+        )
+        return False
+
+    # Check if there are any repeated usernames.
+    if not value.index.is_unique:
+        invalid = value.index[value.index.duplicated()]
+        logging.warning(f"There are duplicate usernames: {invalid.tolist()}.")
+        return False
+
+    # Check other columns.
+    for col in set(value.columns) - {"username", "github", "enrollment_status"}:
+        if "name" in col or col == "tutor":
             data_type = "name"
         elif "email" in col:
             data_type = "email"
-        elif col in ["github", "enrollment_status"]:
-            continue
         elif col == "nationality":
             data_type = "country"
         else:
             data_type = col
+
         validation_function = globals()[f"{data_type}"]
         if not value[col].map(validation_function).all():
-            print(
-                col, validation_function, "fail"
-            )  # replace with logging in the future
+            invalid = value[col][~value[col].map(validation_function)]
+            logging.warning(f'Errors in column "{col}": {invalid.tolist()}.')
             return False
     else:
         return True
-
-
-def assignment(value, valid_cohort=None, exclude_usernames=None):
-    """Check if ``value`` is a valid assignment.
-
-    Parameters
-    ----------
-    value: pd.DataFrame
-
-        Assignment.
-
-    Returns
-    -------
-    bool
-
-        ``True`` if valid, otherwise ``False``.
-
-    """
-    if not isinstance(valid_cohort, pd.DataFrame):
-        # Enforce CID to be read as a string.
-        valid_cohort = pd.read_csv(valid_cohort, dtype={"cid": str})
-
-    if not cohort(valid_cohort):
-        raise ValueError("Invalid valid_cohort passed.")
-
-    if not set(value.columns) <= {"username", "mark", "feedback"}:
-        print(f"Wrong column names {value.columns=}")
-        return False
-    # elif not value.username.map(username).all():
-    #     # Find the invalid usernames for easier debugging.
-    #     for u in value.username:
-    #         if not username(u):
-    #             print(u, "not valid")
-    #     return False
-    elif not value["mark"].map(mark).all():
-        for m in value["mark"]:
-            if not mark(m):
-                print(m, "not valid")
-        return False
-    elif cohort is not None:
-        exclude_usernames = exclude_usernames or []
-        # Check that the usernames are as expected.
-        if not (set(value.username) - set(exclude_usernames)) <= set(
-            valid_cohort["username"]
-        ):
-            for u in set(value.username) - set(exclude_usernames):
-                if u not in cohort["username"].values:
-                    print(u, "not in cohort")
-            return False
-    elif value.username.duplicated().any():
-        # There are duplicates in the usernames.
-        return False
-
-    return True

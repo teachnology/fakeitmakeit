@@ -1,6 +1,94 @@
+import pandas as pd
 import pytest
 
 import fakeitmakeit as fm
+
+
+@pytest.fixture(scope="module")
+def valid_assignment():
+    assignment = pd.DataFrame(
+        {
+            "username": ["abc123", "def4561", "g789"],
+            "mark": [23.0, 56.8, 72.5],
+            "feedback": ["feedback1", "feedback2", "feedback3"],
+        }
+    )
+    return assignment.set_index("username")
+
+
+@pytest.fixture(scope="module")
+def invalid_assignment():
+    assignment = pd.DataFrame(
+        {
+            "username": ["abc123", "def4561", "g789"],
+            "mark": [-5, 56.8, 72.5],
+            "feedback": ["feedback1", "feedback2", "feedback3"],
+        }
+    )
+    return assignment.set_index("username")
+
+
+@pytest.fixture(scope="module")
+def valid_cohort():
+    cohort = pd.DataFrame(
+        {
+            "cid": ["01079210", "02747269", "02605421"],
+            "username": ["jsg8052", "tf97", "mk4717"],
+            "github": ["acse-jsg8052", "edsml-tf97", "edsml-mk4717"],
+            "course": ["acse", "edsml", "edsml"],
+            "title": ["Miss", "Miss", "Mr"],
+            "first_name": ["Jie", "Tracy", "Mahika"],
+            "last_name": ["Gong", "Fry", "Kapur"],
+            "gender": ["female", "female", "male"],
+            "email": [
+                "james13@imperial.ac.uk",
+                "tchurch@imperial.ac.uk",
+                "angela05@imperial.ac.uk",
+            ],
+            "tutor": ["Anne Spencer", "Theresa Jones", "Joseph Wells"],
+            "fee_status": ["overseas", "home", "overseas"],
+            "nationality": ["China", "United Kingdom", "India"],
+            "enrollment_status": ["enrolled", "enrolled", "enrolled"],
+            "personal_email": [
+                "nathanolson@lindsey.biz",
+                "ruizsally@smith.com",
+                "willissandy@cline.com",
+            ],
+        }
+    )
+    return cohort.set_index("username")
+
+
+@pytest.fixture(scope="module")
+def invalid_cohort():
+    # Duplicate username
+    cohort = pd.DataFrame(
+        {
+            "cid": ["01079210", "02747269", "02605421"],
+            "username": ["jsg8052", "tf97", "tf97"],
+            "github": ["acse-jsg8052", "edsml-tf97", "edsml-mk4717"],
+            "course": ["acse", "edsml", "edsml"],
+            "title": ["Miss", "Miss", "Mr"],
+            "first_name": ["Jie", "Tracy", "Mahika"],
+            "last_name": ["Gong", "Fry", "Kapur"],
+            "gender": ["female", "female", "male"],
+            "email": [
+                "james13@imperial.ac.uk",
+                "tchurch@imperial.ac.uk",
+                "angela05@imperial.ac.uk",
+            ],
+            "tutor": ["Anne Spencer", "Theresa Jones", "Joseph Wells"],
+            "fee_status": ["overseas", "home", "overseas"],
+            "nationality": ["China", "United Kingdom", "India"],
+            "enrollment_status": ["enrolled", "enrolled", "enrolled"],
+            "personal_email": [
+                "nathanolson@lindsey.biz",
+                "ruizsally@smith.com",
+                "willissandy@cline.com",
+            ],
+        }
+    )
+    return cohort.set_index("username")
 
 
 class TestEmail:
@@ -264,8 +352,38 @@ class TestMark:
             (65.12, True),  # Middle value
             (101, False),  # Above upper bound
             (-1, False),  # Below lower bound
-            ('50', False),  # Not a number
+            ("50", False),  # Not a number
         ],
     )
     def test_valid(self, mark, expected):
         assert fm.isvalid.mark(mark) == expected
+
+
+class TestAssignment:
+    def test_valid(self, valid_assignment):
+        # Check that valid assignments are valid
+        assert fm.isvalid.assignment(valid_assignment)
+
+    def test_with_valid_usernames(self, valid_assignment):
+        assert fm.isvalid.assignment(
+            valid_assignment, valid_usernames=["abc123", "def4561", "g789"]
+        )
+
+    def test_with_wrong_valid_usernames(self, valid_assignment):
+        # One username is missing.
+        assert not fm.isvalid.assignment(
+            valid_assignment, valid_usernames=["def4561", "g789"]
+        )
+
+    def test_invalid(self, invalid_assignment):
+        # Check that invalid assignments are invalid
+        assert not fm.isvalid.assignment(invalid_assignment)
+
+
+class TestCohort:
+    def test_valid(self, valid_cohort):
+        # Check that valid cohorts are valid
+        assert fm.isvalid.cohort(valid_cohort)
+
+    def test_invalid(self, invalid_cohort):
+        assert not fm.isvalid.cohort(invalid_cohort)
