@@ -7,16 +7,15 @@ import numpy as np
 import pandas as pd
 from faker import Faker
 
-import fakeitmakeit as pb
-import fakeitmakeit.isvalid as pbiv
-import fakeitmakeit.util as pbu
+import fakeitmakeit.isvalid as fmiv
+import fakeitmakeit.util as fmu
 
 
-def cid() -> str:
+def cid():
     """Generate a random 8-digit CID.
 
-    The first digit is always 0, whereas the second digit is 1, or 2. The
-    remaining 6 digits are randomly generated between 0 and 9.
+    The first digit is always 0, whereas the second digit is 1 or 2. The remaining 6
+    digits are randomly generated between 0 and 9.
 
     Returns
     -------
@@ -26,8 +25,8 @@ def cid() -> str:
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.cid()  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.cid()  # doctest: +SKIP
     "01234567"
 
     """
@@ -43,20 +42,20 @@ def cid() -> str:
     return number
 
 
-def gender(distribution=dict(pbu.GENDERS)) -> str:
+def gender(distribution=dict(fmu.GENDERS)):
     """Generate a random gender.
 
     Possible gender values and their relative probabilities are passed via
-    ``distribution`` - a dictionary whose keys are possible outputs and dictionary
-    values are relative probablilities. The values in ``distribution`` do not have to
-    sum to 1 because selections will be made according to the relative weights.
+    ``distribution`` - a dictionary whose keys are possible outputs and values are
+    relative probablilities. The values in ``distribution`` do not have to sum to 1
+    because selections will be made according to the relative weights.
 
     Parameters
     ----------
     distribution: dict
 
-        Keys are possible output values and dictionary values are relative
-        probablilities. For instance, ``{"male": 0.5, "female": 0.5}``.
+        Keys are possible output values and values are relative probablilities. For
+        instance, ``{"male": 0.5, "female": 0.5}``.
 
     Returns
     -------
@@ -66,18 +65,18 @@ def gender(distribution=dict(pbu.GENDERS)) -> str:
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.gender()  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.gender()  # doctest: +SKIP
     'male'
 
     """
-    return pbu.discrete_draw(distribution)
+    return fmu.discrete_draw(distribution)
 
 
-def title(genderval=None, use_period=False) -> str:
+def title(genderval=None):
     """Generate a random title.
 
-    If gender, via ``genderval``, is provided, then the title is generated
+    If gender is provided via ``genderval``, then the title is generated
     according to it. Otherwise, the gender and accordingly the title is
     generated randomly.
 
@@ -89,56 +88,50 @@ def title(genderval=None, use_period=False) -> str:
     ----------
     genderval: str
 
-        Person's gender.
-
-    use_period: bool
-
-        Whether to use a period at the end of the title.
+        Gender.
 
     Returns
     -------
     str
 
-        Randomly generated title according to the gender.
+        Randomly generated title.
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.title('male')
+    >>> import fakeitmakeit as fm
+    >>> fm.title('male')
     'Mr'
-    >>> pb.title()  # doctest: +SKIP
+    >>> fm.title('nonbinary')
     'Mx'
-    >>> pb.title(use_period=True)  # doctest: +SKIP
-    'Mrs.'
+    >>> fm.title()  # doctest: +SKIP
+    'Mx'
 
     """
     genderval = genderval or gender()
     if genderval == "male":
-        res = "Mr"
+        return "Mr"
     elif genderval == "female":
-        res = random.choice(["Ms", "Mrs", "Miss"])
+        return random.choice({"Ms", "Mrs", "Miss"})
     elif genderval == "nonbinary":
-        res = "Mx"
+        return "Mx"
     else:
         raise ValueError(f"Invalid gender: {genderval=}")
 
-    return f"{res}." if use_period else res
 
-
-def course(distribution=dict(pbu.COURSES)) -> str:
+def course(distribution=dict(fmu.COURSES)):
     """Generate a random course.
 
     Possible courses and their relative probabilities are passed via ``distribution``.
-    It is a dictionary whose keys are possible outputs and dictionary values are
-    relative probablilities. The values in ``distribution`` do not have to sum to 1
-    because selections will be made according to the relative weights.
+    It is a dictionary whose keys are possible outputs and values are relative
+    probablilities. The values in ``distribution`` do not have to sum to 1 because
+    selections will be made according to the relative weights.
 
     Parameters
     ----------
     distribution: dict
 
-        Keys are possible outputs and dictionary values are relative probablilities. For
-        instance, ``{"course1": 0.5, "course2": 0.5}``.
+        Keys are possible outputs and values are relative probablilities. For instance,
+        ``{"course1": 0.5, "course2": 0.5}``.
 
     Returns
     -------
@@ -148,19 +141,19 @@ def course(distribution=dict(pbu.COURSES)) -> str:
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.course()  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.course()  # doctest: +SKIP
     'acse'
 
     """
-    return pbu.discrete_draw(distribution)
+    return fmu.discrete_draw(distribution)
 
 
-def country(distribution=dict(pbu.COUNTRIES), bias=None):
+def country(distribution=dict(fmu.COUNTRIES), bias=None):
     """Generate a random country.
 
     Distribution is passed via ``distribution``. It is a dictionary whose keys are
-    possible outputs and dictionary values are relative probablilities. The values in
+    possible outputs and values are relative probablilities. The values in
     ``distribution`` do not have to sum to 1 because selections will be made according
     to the relative weights.
 
@@ -173,7 +166,7 @@ def country(distribution=dict(pbu.COUNTRIES), bias=None):
     ----------
     distribution: dict
 
-        Keys are possible outputs and dictionary values are relative probablilities.
+        Keys are possible outputs and values are relative probablilities.
 
     Returns
     -------
@@ -183,17 +176,17 @@ def country(distribution=dict(pbu.COUNTRIES), bias=None):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.country()  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.country()  # doctest: +SKIP
     'United Kingdom'
-    >>> pb.country(bias={'China': 0.5, 'United Kingdom': 0.2})  # doctest: +SKIP
-    'China'
-    >>> pb.country(distribution={}, bias={'France': 1})
+    >>> fm.country(bias={'India': 0.5, 'United Kingdom': 0.2})  # doctest: +SKIP
+    'India'
+    >>> fm.country(distribution={}, bias={'France': 1})
     'France'
 
     """
     distribution |= bias or {}
-    return pbu.discrete_draw(distribution)
+    return fmu.discrete_draw(distribution)
 
 
 def username(nameval=None):
@@ -209,7 +202,7 @@ def username(nameval=None):
     ----------
     nameval: str
 
-        Person's name.
+        Name.
 
     Returns
     -------
@@ -219,8 +212,8 @@ def username(nameval=None):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.username('John Smith')  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.username('John Smith')  # doctest: +SKIP
     'jws4122'
 
     """
@@ -249,17 +242,17 @@ def username(nameval=None):
     return letters + numbers
 
 
-def email(domain=None):
+def email(domainval=None):
     """Generate a random email.
 
-    If ``domain`` is not provided, then an email with a random domain is generated.
+    If ``domainval`` is not provided, then an email with a random domain is generated.
     Otherwise, the email is generated with the provided domain.
 
     Parameters
     ----------
-    domain: str
+    domainval: str
 
-        Domain of the email.
+        Domain.
 
     Returns
     -------
@@ -269,15 +262,15 @@ def email(domain=None):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.email()  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.email()  # doctest: +SKIP
     'somerandomemail@domain.com'
-    >>> pb.email(domain='myuniversity.ac.uk')  # doctest: +SKIP
+    >>> fm.email(domainval='myuniversity.ac.uk')  # doctest: +SKIP
     'john.doe@myuniversity.ac.uk'
 
     """
     fake = Faker()
-    domain = domain or fake.domain_name()
+    domain = domainval or fake.domain_name()
     return f"{fake.user_name()}@{domain}"
 
 
@@ -287,17 +280,17 @@ def name(genderval=None, countryval=None):
     This function uses Faker to generate a random name. Depending on the ``countryval``
     and ``genderval`` parameters, the name is generated according to the locale and by
     calling the appropriate method from ``Faker``. Otherwise, the name with the default
-    Faker locale is returned.
+    ``Faker`` locale is returned.
 
     Parameters
     ----------
     genderval: str
 
-        Gender of the person.
+        Gender.
 
     countryval: str
 
-        Country of the person.
+        Country.
 
     Returns
     -------
@@ -307,16 +300,16 @@ def name(genderval=None, countryval=None):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.name()  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.name()  # doctest: +SKIP
     'John Smith'
-    >>> pb.name(countryval='China')  # doctest: +SKIP
+    >>> fm.name(countryval='China')  # doctest: +SKIP
     'Zhang San'
-    >>> pb.name(genderval='female', countryval='Germany')  # doctest: +SKIP
+    >>> fm.name(genderval='female', countryval='Germany')  # doctest: +SKIP
     'Anna Schmidt'
 
     """
-    locale = pbu.COUNTRY_LOCALE.get(countryval, None)
+    locale = fmu.COUNTRY_LOCALE.get(countryval, None)
     fake = Faker(locale)
 
     # Romanized is available only for some countries.
@@ -337,18 +330,18 @@ def name(genderval=None, countryval=None):
         pattern = r"\b(?:[A-Z]+\b|PhD|Dr\(a\)|,|Dr|Mr|Mrs|Ms|Miss|\w*\.\w*)"
         res = re.sub(pattern, "", res).strip()
 
-    if pbiv.name(res):
+    if fmiv.name(res):
         return res
     else:
         # If the name is not valid, then we generate a new one with default faker until
         # it passes validation.
-        while not pbiv.name(res):
+        while not fmiv.name(res):
             res = Faker().name()
 
         return res
 
 
-def mark(mean=65, stdev=6, fail_probability=0.02):
+def mark(mean=65.0, stdev=6.0, pfail=0.02):
     """Generate a random mark.
 
     A mark between 0 and 100 is generated from a normal distribution with the given
@@ -359,13 +352,13 @@ def mark(mean=65, stdev=6, fail_probability=0.02):
     ----------
     mean: float
 
-        Mean of the normal distribution.
+        Mean.
 
     stdev: float
 
-        Standard deviation of the normal distribution.
+        Standard deviation.
 
-    fail_probability: float
+    pfail: float
 
         Probability that the mark will be 0.
 
@@ -377,12 +370,12 @@ def mark(mean=65, stdev=6, fail_probability=0.02):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.mark(65, 10)  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.mark(65, 10)  # doctest: +SKIP
     71
 
     """
-    if np.random.rand() < fail_probability:
+    if np.random.rand() < pfail:
         # Return 0 with a probability of fail_probability
         return 0.0
     else:
@@ -395,20 +388,10 @@ def mark(mean=65, stdev=6, fail_probability=0.02):
         return round(number, 2)
 
 
-def feedback(npmin=1, npmax=3):
+def feedback():
     """Generate a random feedback.
 
-    The feedback is generated by Faker and consists of ``nmin`` to ``nmax`` paragraphs.
-
-    Parameters
-    ----------
-    npmin: int
-
-        Minimum number of paragraphs.
-
-    npmax: int
-
-        Maximum number of paragraphs.
+    The feedback is generated by Faker and consists of one paragraph.
 
     Returns
     -------
@@ -418,19 +401,12 @@ def feedback(npmin=1, npmax=3):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.feedback()  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.feedback()  # doctest: +SKIP
     ...
 
     """
-    # Create a Faker generator
-    fake = Faker()
-
-    # Generate the specified number of paragraphs
-    random_paragraphs = fake.paragraphs(nb=random.randint(npmin, npmax))
-
-    # Join the paragraphs into a single string
-    return "\n\n".join(random_paragraphs)
+    return "\n\n".join(Faker().paragraphs(nb=1))
 
 
 # Distributions, biases, constants.
@@ -499,30 +475,30 @@ def student():
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.student()
+    >>> import fakeitmakeit as fm
+    >>> fm.student()
     Student(cid=...)
     """
     # Values required for other fields.
-    gender = pb.gender(distribution=_gender_distribution)
-    course = pb.course(distribution=_course_distribution)
-    nationality = pb.country(bias=_country_biases)
-    first_name, *_, last_name = pb.name(
+    gender = gender(distribution=_gender_distribution)
+    course = course(distribution=_course_distribution)
+    nationality = country(bias=_country_biases)
+    first_name, *_, last_name = fm.name(
         genderval=gender, countryval=nationality
     ).split()
-    username = pb.username(nameval=f"{first_name} {last_name}")
+    username = username(nameval=f"{first_name} {last_name}")
 
     return Student(
-        cid=pb.cid(),
+        cid=cid(),
         gender=gender,
         course=course,
         nationality=nationality,
         first_name=first_name,
         last_name=last_name,
-        title=pb.title(genderval=gender),
+        title=title(genderval=gender),
         username=username,
-        email=pb.email(domain="imperial.ac.uk"),
-        personal_email=pb.email(),
+        email=email(domain="imperial.ac.uk"),
+        personal_email=email(),
         github=f"{course}-{username}",
         fee_status="home" if nationality == "United Kingdom" else "overseas",
         enrollment_status="enrolled",
@@ -547,8 +523,8 @@ def cohort(n):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.cohort(100)  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.cohort(100)  # doctest: +SKIP
     ...
 
     """
@@ -590,18 +566,18 @@ def assignment(usernames, mean=65, sd=6, fail_probability=0.02, feedback=True):
 
     Examples
     --------
-    >>> import phantombunch as pb
-    >>> pb.assignment(["johndoe", "janedoe"], feedback=False)  # doctest: +SKIP
+    >>> import fakeitmakeit as fm
+    >>> fm.assignment(["johndoe", "janedoe"], feedback=False)  # doctest: +SKIP
       username  mark
     0  johndoe  63.0
     1  janedoe  71.0
 
     """
     usernames = list(usernames)
-    marks = [pb.mark(mean, sd, fail_probability) for _ in range(len(usernames))]
+    marks = [mark(mean, sd, fail_probability) for _ in range(len(usernames))]
     data = {"username": usernames, "mark": marks}
 
     if feedback:
-        data["feedback"] = [pb.feedback() for _ in range(len(usernames))]
+        data["feedback"] = [feedback() for _ in range(len(usernames))]
 
     return pd.DataFrame(data)
