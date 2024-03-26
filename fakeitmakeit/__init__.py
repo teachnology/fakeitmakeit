@@ -1,5 +1,4 @@
 from .factory import (
-    Student,
     assignment,
     cid,
     cohort,
@@ -26,7 +25,6 @@ __all__ = [
     "name",
     "mark",
     "feedback",
-    "Student",
     "student",
     "cohort",
     "assignment",

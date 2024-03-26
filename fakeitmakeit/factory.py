@@ -1,7 +1,6 @@
 import random
 import re
 import string
-from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
@@ -111,7 +110,7 @@ def title(genderval=None):
     if genderval == "male":
         return "Mr"
     elif genderval == "female":
-        return random.choice({"Ms", "Mrs", "Miss"})
+        return random.choice(["Ms", "Mrs", "Miss"])
     elif genderval == "nonbinary":
         return "Mx"
     else:
@@ -409,61 +408,6 @@ def feedback():
     return "\n\n".join(Faker().paragraphs(nb=1))
 
 
-# Distributions, biases, constants.
-_gender_distribution = {"male": 0.65, "female": 0.34, "nonbinary": 0.01}
-_course_distribution = {"acse": 0.4, "edsml": 0.4, "gems": 0.2}
-_country_biases = {
-    "China": 1800,
-    "United Kingdom": 350,
-    "India": 150,
-    "United States": 100,
-    "Germany": 100,
-    "France": 100,
-    "Hong Kong": 100,
-    "Spain": 100,
-    "Italy": 100,
-    "Netherlands": 80,
-    "Canada": 80,
-}
-_attributes = [
-    "cid",
-    "username",
-    "github",
-    "course",
-    "title",
-    "first_name",
-    "last_name",
-    "gender",
-    "email",
-    "tutor",
-    "fee_status",
-    "nationality",
-    "enrollment_status",
-    "personal_email",
-]
-_tutors = [name() for _ in range(25)]
-
-
-@dataclass
-class Student:
-    """A dataclass to be populated in student function."""
-
-    cid: str
-    gender: str
-    nationality: str
-    first_name: str
-    last_name: str
-    title: str
-    course: str
-    username: str
-    email: str
-    personal_email: str
-    github: str
-    fee_status: str
-    enrollment_status: str
-    tutor: str
-
-
 def student():
     """Generate a random student.
 
@@ -478,31 +422,30 @@ def student():
     >>> import fakeitmakeit as fm
     >>> fm.student()
     Student(cid=...)
+
     """
     # Values required for other fields.
-    gender = gender(distribution=_gender_distribution)
-    course = course(distribution=_course_distribution)
-    nationality = country(bias=_country_biases)
-    first_name, *_, last_name = fm.name(
-        genderval=gender, countryval=nationality
-    ).split()
-    username = username(nameval=f"{first_name} {last_name}")
+    genderval = gender(distribution=fmu.cohort_bias.gender)
+    courseval = course(distribution=fmu.cohort_bias.course)
+    countryval = country(bias=fmu.cohort_bias.country_bias)
+    first_name, *_, last_name = name(genderval=genderval, countryval=countryval).split()
+    usernameval = username(nameval=f"{first_name} {last_name}")
 
-    return Student(
+    return fmu.Student(
         cid=cid(),
-        gender=gender,
-        course=course,
-        nationality=nationality,
+        gender=genderval,
+        course=courseval,
+        nationality=countryval,
         first_name=first_name,
         last_name=last_name,
-        title=title(genderval=gender),
-        username=username,
-        email=email(domain="imperial.ac.uk"),
+        title=title(genderval=genderval),
+        username=usernameval,
+        email=email(domainval="imperial.ac.uk"),
         personal_email=email(),
         github=f"{course}-{username}",
-        fee_status="home" if nationality == "United Kingdom" else "overseas",
+        fee_status="home" if countryval == "United Kingdom" else "overseas",
         enrollment_status="enrolled",
-        tutor=random.choice(_tutors),
+        tutor=random.choice(fmu.cohort_bias.tutors),
     )
 
 
@@ -529,7 +472,10 @@ def cohort(n):
 
     """
     students = [student() for _ in range(n)]
-    data = {col: [getattr(student, col) for student in students] for col in _attributes}
+    data = {
+        col: [getattr(student, col) for student in students]
+        for col in fmu._student_attributes
+    }
     return pd.DataFrame(data)
 
 

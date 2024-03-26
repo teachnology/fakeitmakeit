@@ -152,7 +152,7 @@ class TestCountry:
 
     def test_defaults(self):
         # Check that the country is one of the expected ones.
-        assert fm.country() in pbu.COUNTRIES
+        assert fm.country() in fm.util.COUNTRIES
 
     def test_probability_certain_outcome(self):
         # Check that the probabilities are respected.
@@ -230,7 +230,7 @@ class TestEmail:
         assert "." in fm.email()
 
     def test_domain(self):
-        # Check that the email contains the domain if specified.
+        # Check that the email contains domainval if specified.
         assert fm.email(domainval="gmail.com").endswith("@gmail.com")
 
     def test_valid(self):
@@ -321,7 +321,7 @@ class TestFeedback:
 class TestStudent:
     def test_type(self):
         # Check that the output is a Student dataclass.
-        assert isinstance(fm.student(), fm.Student)
+        assert isinstance(fm.student(), fm.util.Student)
 
     def test_cid(self):
         # Check that the CID is a string.

@@ -26,7 +26,7 @@ class TestGENDERS:
 class TestTITLES:
     def test_type(self):
         # Check that TITLES is a set.
-        assert isinstance(fm.util.TITLES, set)
+        assert isinstance(fm.util.TITLES, list)
 
     def test_length(self):
         # Check that TITLES has 5 titles.
