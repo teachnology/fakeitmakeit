@@ -1,6 +1,7 @@
 import random
 import re
 import string
+from dataclasses import fields
 
 import numpy as np
 import pandas as pd
@@ -415,7 +416,7 @@ def student():
     -------
     Student
 
-        A dataclass containing student information.
+        Student dataclass.
 
     Examples
     --------
@@ -424,7 +425,7 @@ def student():
     Student(cid=...)
 
     """
-    # Values required for other fields.
+    # (Intermediate) values required for other fields.
     genderval = gender(distribution=fmu.cohort_bias.gender)
     courseval = course(distribution=fmu.cohort_bias.course)
     countryval = country(bias=fmu.cohort_bias.country_bias)
@@ -445,7 +446,7 @@ def student():
         github=f"{course}-{username}",
         fee_status="home" if countryval == "United Kingdom" else "overseas",
         enrollment_status="enrolled",
-        tutor=random.choice(fmu.cohort_bias.tutors),
+        tutor=name(),
     )
 
 
@@ -456,31 +457,34 @@ def cohort(n):
     ----------
     n: int
 
-        Number of students in the cohort.
+        Number of students.
 
     Returns
     -------
-    pandas.DataFrame
+    pd.DataFrame
 
-        A dataframe containing student information.
+        A cohort dataframe.
 
     Examples
     --------
     >>> import fakeitmakeit as fm
-    >>> fm.cohort(100)  # doctest: +SKIP
+    >>> fm.cohort(n=30)  # doctest: +SKIP
     ...
 
     """
     students = [student() for _ in range(n)]
-    data = {
-        col: [getattr(student, col) for student in students]
-        for col in fmu._student_attributes
-    }
-    return pd.DataFrame(data)
+    data = pd.DataFrame(
+        {
+            col.name: [getattr(student, col.name) for student in students]
+            for col in fields(fmu.Student)
+        }
+    )
+
+    return data.set_index("username")
 
 
-def assignment(usernames, mean=65, sd=6, fail_probability=0.02, feedback=True):
-    """Create an assignment DataFrame.
+def assignment(usernames, mean=65, stdev=6, pfail=0.02, add_feedback=True):
+    """Generate an assignment.
 
     Parameters
     ----------
@@ -492,38 +496,44 @@ def assignment(usernames, mean=65, sd=6, fail_probability=0.02, feedback=True):
 
         Mean mark.
 
-    sd: float
+    stdev: float
 
         Standard deviation of marks.
 
-    fail_probability: float
+    pfail: float
 
-        Probability of failing.
+        Probability that the mark will be 0.
 
-    feedback: bool
+    add_feedback: bool
 
-        Whether to include feedback.
+        If ``True``, column with feedback is added.
 
     Returns
     -------
-    pandas.DataFrame
+    pd.DataFrame
 
-        DataFrame of usernames and marks.
+        An assignment dataframe.
 
     Examples
     --------
     >>> import fakeitmakeit as fm
-    >>> fm.assignment(["johndoe", "janedoe"], feedback=False)  # doctest: +SKIP
+    >>> fm.assignment(["johndoe", "janedoe"], add_feedback=False)  # doctest: +SKIP
       username  mark
     0  johndoe  63.0
     1  janedoe  71.0
 
     """
     usernames = list(usernames)
-    marks = [mark(mean, sd, fail_probability) for _ in range(len(usernames))]
+    if not all(fmiv.username(username) for username in usernames):
+        invalid = [u for u in usernames if not fmiv.username(u)]
+        raise ValueError(f"Invalid usernames passed: {invalid}")
+
+    marks = [mark(mean, stdev, pfail) for _ in range(len(usernames))]
     data = {"username": usernames, "mark": marks}
 
-    if feedback:
+    if add_feedback:
         data["feedback"] = [feedback() for _ in range(len(usernames))]
 
-    return pd.DataFrame(data)
+    data = pd.DataFrame(data)
+
+    return data.set_index("username")

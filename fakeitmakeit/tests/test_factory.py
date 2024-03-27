@@ -12,12 +12,12 @@ UINT_RE = re.compile(r"^[0-9]+$")  # unsigned integer regex
 
 @pytest.fixture(scope="module")
 def cohort():
-    return fm.cohort(100)
+    return fm.cohort(n=100)
 
 
 @pytest.fixture(scope="module")
 def assignment(cohort):
-    return fm.assignment(cohort["username"], feedback=True)
+    return fm.assignment(usernames=cohort.index, add_feedback=True)
 
 
 class TestCID:
@@ -256,8 +256,13 @@ class TestName:
 
     def test_china(self):
         # Check that Chinese names are generated as expected.
-        names = set(" ".join(fm.name(countryval="China") for _ in range(100)).split())
-        assert {"Jang", "Jing", "Wei", "Fang", "Lei", "Tao"} & names
+        for i in range(100):
+            first_name, *_ = fm.name(countryval="China").split()
+            if first_name in {"Jang", "Jing", "Wei", "Fang", "Lei", "Tao"}:
+                assert True
+                break
+        else:
+            assert False
 
     def test_gender(self):
         # Check expected female names are in the output.
@@ -343,7 +348,7 @@ class TestCohort:
 
     def test_tutor(self, cohort):
         # Check that the number of tutors is bounded.
-        assert len(cohort["tutor"].unique()) <= 25
+        assert cohort["tutor"].map(fm.isvalid.name).all()
 
     def test_nationality(self, cohort):
         # Check that nationalities are as expected.
@@ -355,7 +360,9 @@ class TestCohort:
 
     def test_username(self, cohort):
         # Check that usernames are as expected.
-        assert cohort["username"].map(fm.isvalid.username).all()
+        assert cohort.index.name == "username"
+        assert cohort.index.is_unique
+        assert cohort.index.map(fm.isvalid.username).all()
 
     def test_cid(self, cohort):
         # Check that CIDs are as expected.
@@ -389,6 +396,10 @@ class TestCohort:
         # Check that genders are as expected.
         assert cohort["fee_status"].map(fm.isvalid.fee_status).all()
 
+    def test_isvalid(self, cohort):
+        # Check that the output is a DataFrame.
+        assert fm.isvalid.cohort(cohort)
+
 
 class TestAssignment:
     def test_type(self, assignment):
@@ -397,15 +408,17 @@ class TestAssignment:
 
     def test_columns(self, assignment):
         # Check that the output has the right columns.
-        assert set(assignment.columns) == set(["username", "mark", "feedback"])
+        assert set(assignment.columns) == set(["mark", "feedback"])
 
-    def test_username(self, cohort, assignment):
-        # Check that the usernames are as expected.
-        assert set(assignment["username"]) == set(cohort["username"])
+    def test_username(self, cohort):
+        # Check that usernames are as expected.
+        assert cohort.index.name == "username"
+        assert cohort.index.is_unique
+        assert cohort.index.map(fm.isvalid.username).all()
 
     def test_mark(self, assignment):
         # Check that the marks are as expected.
-        assert assignment["mark"].between(0, 100).all()
+        assert assignment["mark"].map(fm.isvalid.mark).all()
 
     def test_feedback(self, assignment):
         # Check that the feedback is as expected.
@@ -413,21 +426,10 @@ class TestAssignment:
 
     def test_no_feedback(self, cohort):
         # Check that the feedback is as expected.
-        assignment = fm.assignment(cohort["username"], feedback=False)
+        assignment = fm.assignment(usernames=cohort.index, add_feedback=False)
         assert "feedback" not in assignment.columns
 
     def test_isvalid(self, cohort):
         # Check that the output is a DataFrame.
-        assignment = fm.assignment(cohort["username"], feedback=True)
-        assert fm.isvalid.assignment(assignment, valid_cohort=cohort)
-
-
-class TestValidCohort:
-    def test_valid_cohort(self, cohort):
-        # Check that the output is a DataFrame.
-        assert fm.isvalid.cohort(cohort)
-
-    def test_invalid_cohort(self, cohort):
-        # Check that the output is a DataFrame.
-        cohort["username"] = cohort["username"] + "#"
-        assert not fm.isvalid.cohort(cohort)
+        assignment = fm.assignment(usernames=cohort.index, add_feedback=True)
+        assert fm.isvalid.assignment(assignment, valid_usernames=cohort.index)

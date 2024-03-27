@@ -3,7 +3,6 @@ from dataclasses import dataclass
 
 import faker
 import pycountry
-from faker import Faker
 
 # Distributions.
 GENDERS = {"male": 0.49, "female": 0.5, "nonbinary": 0.01}
@@ -49,24 +48,6 @@ def discrete_draw(distribution):
     return random.choices(values, weights=probabilities, k=1)[0]
 
 
-_student_attributes = [
-    "cid",
-    "username",
-    "github",
-    "course",
-    "title",
-    "first_name",
-    "last_name",
-    "gender",
-    "email",
-    "tutor",
-    "fee_status",
-    "nationality",
-    "enrollment_status",
-    "personal_email",
-]
-
-
 @dataclass
 class Student:
     """A dataclass to be populated in student function."""
@@ -94,7 +75,6 @@ class CohortBias:
     gender: dict
     course: dict
     country_bias: dict
-    tutors: list
 
 
 cohort_bias = CohortBias(
@@ -113,5 +93,4 @@ cohort_bias = CohortBias(
         "Netherlands": 80,
         "Canada": 80,
     },
-    tutors=[Faker().name() for _ in range(25)],
 )

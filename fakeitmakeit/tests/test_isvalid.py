@@ -369,11 +369,30 @@ class TestAssignment:
             valid_assignment, valid_usernames=["abc123", "def4561", "g789"]
         )
 
-    def test_with_wrong_valid_usernames(self, valid_assignment):
+    def test_with_wrong_valid_usernames1(self, valid_assignment):
         # One username is missing.
         assert not fm.isvalid.assignment(
             valid_assignment, valid_usernames=["def4561", "g789"]
         )
+
+    def test_with_wrong_valid_usernames2(self, valid_assignment):
+        # One username is missing.
+        with pytest.raises(ValueError):
+            fm.isvalid.assignment(
+                valid_assignment, valid_usernames=["def4561", "wrong_username"]
+            )
+
+    def test_wrong_index(self, valid_assignment):
+        valid_assignment.index = ["1", "2", "3"]
+        assert not fm.isvalid.assignment(valid_assignment)
+
+    def test_wrong_index_name(self, valid_assignment):
+        valid_assignment.index.name = "wrong_name"
+        assert not fm.isvalid.assignment(valid_assignment)
+
+    def test_index_not_unique(self, valid_assignment):
+        valid_assignment.index = ["abc123", "abc123", "g789"]
+        assert not fm.isvalid.assignment(valid_assignment)
 
     def test_invalid(self, invalid_assignment):
         # Check that invalid assignments are invalid

@@ -310,6 +310,10 @@ def assignment(value, valid_usernames=None):
 
         Assignment.
 
+    valid_usernames: Iterable[str], optional
+
+        Iterable of valid usernames.
+
     Returns
     -------
     bool
