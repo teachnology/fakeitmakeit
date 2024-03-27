@@ -4,7 +4,7 @@ import pytest
 import fakeitmakeit as fm
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def valid_assignment():
     assignment = pd.DataFrame(
         {
@@ -16,7 +16,7 @@ def valid_assignment():
     return assignment.set_index("username")
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def invalid_assignment():
     assignment = pd.DataFrame(
         {
@@ -28,7 +28,7 @@ def invalid_assignment():
     return assignment.set_index("username")
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def valid_cohort():
     cohort = pd.DataFrame(
         {
@@ -388,10 +388,22 @@ class TestAssignment:
 
     def test_wrong_index_name(self, valid_assignment):
         valid_assignment.index.name = "wrong_name"
+        print(10000 * "-")
+        print(valid_assignment.index)
+        print(valid_assignment.index.is_unique)
         assert not fm.isvalid.assignment(valid_assignment)
 
     def test_index_not_unique(self, valid_assignment):
-        valid_assignment.index = ["abc123", "abc123", "g789"]
+        valid_assignment.index = ["abc123", "abc123", "gr789"]
+        valid_assignment.index.name = "username"
+        assert not fm.isvalid.assignment(valid_assignment)
+
+    def test_wrong_feedback(self, valid_assignment):
+        valid_assignment.loc[:, "feedback"] = [1, 2, 3]
+        assert not fm.isvalid.assignment(valid_assignment)
+
+    def test_wrong_columns(self, valid_assignment):
+        valid_assignment["wrong_column"] = [1, 2, 3]
         assert not fm.isvalid.assignment(valid_assignment)
 
     def test_invalid(self, invalid_assignment):
@@ -406,3 +418,15 @@ class TestCohort:
 
     def test_invalid(self, invalid_cohort):
         assert not fm.isvalid.cohort(invalid_cohort)
+
+    def test_wrong_index(self, valid_cohort):
+        valid_cohort.index = ["1", "2", "3"]
+        assert not fm.isvalid.cohort(valid_cohort)
+
+    def test_wrong_index_name(self, valid_cohort):
+        valid_cohort.index.name = "wrong_name"
+        assert not fm.isvalid.cohort(valid_cohort)
+
+    def test_wrong_data(self, valid_cohort):
+        valid_cohort.loc["tf97", "first_name"] = "WRONG NAME"
+        assert not fm.isvalid.cohort(valid_cohort)

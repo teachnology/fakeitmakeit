@@ -374,7 +374,7 @@ def assignment(value, valid_usernames=None):
 
     # Check the feedback column.
     if not (value["feedback"].map(type) == str).all():
-        invalid = value["feedback"][~value["feedback"].map(type) == str]
+        invalid = value["feedback"][~(value["feedback"].map(type) == str)]
         logging.warning(f"Invalid feedback: {invalid.tolist()}.")
         return False
 

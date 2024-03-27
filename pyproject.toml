@@ -53,4 +53,5 @@ convention = "numpy"
 omit = ["fakeitmakeit/tests/*.py"]
 
 [tool.pytest.ini_options]
-addopts = "-v -n auto --doctest-modules --cov=fakeitmakeit --cov-report=html"
+addopts = "-v --doctest-modules --cov=fakeitmakeit --cov-report=html --cov-report=term"
+# addopts = "-v -n auto --doctest-modules --cov=fakeitmakeit --cov-report=html --cov-report=term"

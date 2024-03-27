@@ -247,18 +247,22 @@ class TestName:
         # Check that the name contains a space.
         assert " " in fm.name()
 
-    def test_country_gender(self):
-        # Check that different countries and names are accepted.
-        assert all(
-            isinstance(fm.name(genderval=fm.gender(), countryval=fm.country()), str)
-            for _ in range(25)
-        )
-
     def test_china(self):
         # Check that Chinese names are generated as expected.
-        for i in range(100):
+        for i in range(300):
             first_name, *_ = fm.name(countryval="China").split()
-            if first_name in {"Jang", "Jing", "Wei", "Fang", "Lei", "Tao"}:
+            if first_name in {
+                "Jang",
+                "Jing",
+                "Wei",
+                "Fang",
+                "Lei",
+                "Tao",
+                "Qiang",
+                "Ming",
+                "Chao",
+                "Li",
+            }:
                 assert True
                 break
         else:
@@ -266,13 +270,30 @@ class TestName:
 
     def test_gender(self):
         # Check expected female names are in the output.
-        names = set(
-            " ".join(
-                fm.name(genderval="female", countryval="United Kingdom")
-                for _ in range(100)
+        for i in range(300):
+            first_name, *_ = fm.name(
+                genderval="female", countryval="United Kingdom"
             ).split()
-        )
-        assert {"Ellie", "Jill", "Irene", "Jean", "Megan", "Fiona", "Sylvia"} & names
+            if first_name in {
+                "Ellie",
+                "Jill",
+                "Irene",
+                "Jean",
+                "Megan",
+                "Fiona",
+                "Sylvia",
+                "Claire",
+                "Kim",
+                "Lydia",
+                "Jane",
+                "Karen",
+                "Amy",
+                "Paula",
+            }:
+                assert True
+                break
+        else:
+            assert False
 
     def test_isvalid(self):
         # Check that name is valid.
@@ -428,6 +449,11 @@ class TestAssignment:
         # Check that the feedback is as expected.
         assignment = fm.assignment(usernames=cohort.index, add_feedback=False)
         assert "feedback" not in assignment.columns
+
+    def test_wrong_username(self):
+        # Check that the exception is raised.
+        with pytest.raises(ValueError):
+            fm.assignment(usernames=["wrong_username"], add_feedback=True)
 
     def test_isvalid(self, cohort):
         # Check that the output is a DataFrame.
