@@ -375,13 +375,14 @@ def mark(mean=65.0, stdev=6.0, pfail=0.02):
     71
 
     """
-    if np.random.rand() < pfail:
+    rng = np.random.default_rng()
+    if rng.random() < pfail:
         # Return 0 with a probability of fail_probability
         return 0.0
     else:
         # Generate a random number from a normal distribution with the given
         # mean and standard deviation.
-        number = np.random.normal(mean, stdev)
+        number = rng.normal(loc=mean, scale=stdev)
         # Clip the number to be be between 0 and 100.
         number = np.clip(number, 0, 100)
         # Round the number to two decimal places

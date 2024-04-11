@@ -29,8 +29,8 @@ def email(value):
     False
 
     """
-    EMAIL_RE = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-    return bool(re.match(EMAIL_RE, value))
+    email_re = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+    return bool(re.fullmatch(email_re, value))
 
 
 def username(value):
@@ -58,8 +58,8 @@ def username(value):
 
     """
     # We allow 1-3 lowercase letters followed by 1-5 numbers - first number is never 0.
-    USERNAME_RE = r"^[a-z]{1,3}[1-9][0-9]{1,4}$"
-    return bool(re.match(USERNAME_RE, value))
+    username_re = r"[a-z]{1,3}[1-9][0-9]{1,4}"
+    return bool(re.fullmatch(username_re, value))
 
 
 def cid(value):
@@ -87,8 +87,8 @@ def cid(value):
 
     """
     # We allow the second digit to be 0, 1, or 2.
-    CID_RE = r"^0[012][0-9]{6}$"
-    return bool(re.match(CID_RE, value))
+    cid_re = r"0[012][0-9]{6}"
+    return bool(re.fullmatch(cid_re, value))
 
 
 def name(value):
@@ -119,8 +119,8 @@ def name(value):
     False
 
     """
-    NAME_RE = r"^([A-Z][a-z]*)([-\s](([A-Z][a-z]*)|\([A-Z][a-z]*\)))*$"
-    return bool(re.match(NAME_RE, value))
+    name_re = r"([A-Z][a-z]*)([-\s](([A-Z][a-z]*)|\([A-Z][a-z]*\)))*"
+    return bool(re.fullmatch(name_re, value))
 
 
 def title(value):
@@ -149,8 +149,8 @@ def title(value):
     False
 
     """
-    TITLE_RE = r"^(Mr|Ms|Mrs|Mx|Miss|Dr)$"
-    return bool(re.match(TITLE_RE, value))
+    title_re = r"(Mr|Ms|Mrs|Mx|Miss|Dr)"
+    return bool(re.fullmatch(title_re, value))
 
 
 def course(value):
@@ -177,8 +177,8 @@ def course(value):
     False
 
     """
-    COURSE_RE = r"^(acse|edsml|gems)$"
-    return bool(re.match(COURSE_RE, value))
+    course_re = r"(acse|edsml|gems)"
+    return bool(re.fullmatch(course_re, value))
 
 
 def gender(value):
@@ -205,8 +205,8 @@ def gender(value):
     False
 
     """
-    GENDER_RE = r"^(male|female|nonbinary)$"
-    return bool(re.match(GENDER_RE, value))
+    gender_re = r"(male|female|nonbinary)"
+    return bool(re.fullmatch(gender_re, value))
 
 
 def fee_status(value):
@@ -235,8 +235,8 @@ def fee_status(value):
     False
 
     """
-    FEE_STATUS_RE = r"^(home|overseas|(home - elq))$"
-    return bool(re.match(FEE_STATUS_RE, value))
+    fee_status_re = r"(home|overseas|(home - elq))"
+    return bool(re.fullmatch(fee_status_re, value))
 
 
 def country(value):
@@ -438,5 +438,4 @@ def cohort(value):
             invalid = value[col][~value[col].map(validation_function)]
             logging.warning(f'Errors in column "{col}": {invalid.tolist()}.')
             return False
-    else:
-        return True
+    return True

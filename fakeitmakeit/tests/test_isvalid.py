@@ -154,8 +154,9 @@ class TestUsername:
         assert not fm.isvalid.username("ab 1234")
 
     def test_invalid_trailing_whitespace(self):
-        # Test case with trailing whitespace
+        # Test case with whitespace
         assert not fm.isvalid.username("ab1234 ")
+        assert not fm.isvalid.username(" ab1234")
 
 
 class TestCID:

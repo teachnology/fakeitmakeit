@@ -81,7 +81,7 @@ class TestCOUNTRIES:
         )
 
 
-class TestCOUNTRY_LOCALE:
+class TestCOUNTRYLOCALE:
     def test_type(self):
         # Check that COUNTRY_LOCALE is a dictionary.
         assert isinstance(fm.util.COUNTRY_LOCALE, dict)
