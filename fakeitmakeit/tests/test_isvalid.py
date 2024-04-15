@@ -410,7 +410,7 @@ class TestCohort:
         assert not fm.isvalid.cohort(valid_cohort)
 
     def test_github(self, valid_cohort):
-        course = valid_cohort.github.str.extract(r'(^.*?)\-', expand=False)
-        username = valid_cohort.github.str.extract(r'\-(.*?$)', expand=False)
+        course = valid_cohort.github.str.extract(r"(^.*?)\-", expand=False)
+        username = valid_cohort.github.str.extract(r"\-(.*?$)", expand=False)
         assert course.map(fm.isvalid.course).all()
         assert username.map(fm.isvalid.username).all()

@@ -341,11 +341,11 @@ def name(genderval=None, countryval=None):
         return res
 
 
-def mark(mean=65.0, stdev=6.0, pfail=0.02):
+def mark(mean=65.0, std=6.0, pfail=0.02):
     """Generate a random mark.
 
     A mark between 0 and 100 is generated from a normal distribution with the given
-    ``mean`` and standard deviation ``stdev``. There is ``fail_probability`` that the
+    ``mean`` and standard deviation ``std``. There is ``fail_probability`` that the
     mark will be 0. Resulting mark is rounded to two decimal places.
 
     Parameters
@@ -354,7 +354,7 @@ def mark(mean=65.0, stdev=6.0, pfail=0.02):
 
         Mean.
 
-    stdev: float
+    std: float
 
         Standard deviation.
 
@@ -371,7 +371,7 @@ def mark(mean=65.0, stdev=6.0, pfail=0.02):
     Examples
     --------
     >>> import fakeitmakeit as fm
-    >>> fm.mark(65, 10)  # doctest: +SKIP
+    >>> fm.mark(mean=65, std=10)  # doctest: +SKIP
     71
 
     """
@@ -382,7 +382,7 @@ def mark(mean=65.0, stdev=6.0, pfail=0.02):
     else:
         # Generate a random number from a normal distribution with the given
         # mean and standard deviation.
-        number = rng.normal(loc=mean, scale=stdev)
+        number = rng.normal(loc=mean, scale=std)
         # Clip the number to be be between 0 and 100.
         number = np.clip(number, 0, 100)
         # Round the number to two decimal places
@@ -484,7 +484,7 @@ def cohort(n):
     return data.set_index("username")
 
 
-def assignment(usernames, mean=65, stdev=6, pfail=0.02):
+def assignment(usernames, mean=65, std=6, pfail=0.02):
     """Generate an assignment.
 
     Parameters
@@ -497,7 +497,7 @@ def assignment(usernames, mean=65, stdev=6, pfail=0.02):
 
         Mean mark.
 
-    stdev: float
+    std: float
 
         Standard deviation of marks.
 
@@ -515,9 +515,9 @@ def assignment(usernames, mean=65, stdev=6, pfail=0.02):
     --------
     >>> import fakeitmakeit as fm
     >>> fm.assignment(["johndoe", "janedoe"])  # doctest: +SKIP
-      username  mark
-    0  johndoe  63.0
-    1  janedoe  71.0
+             mark
+    johndoe  63.0
+    janedoe  71.0
 
     """
     usernames = list(usernames)
@@ -525,6 +525,6 @@ def assignment(usernames, mean=65, stdev=6, pfail=0.02):
         invalid = [u for u in usernames if not fmiv.username(u)]
         raise ValueError(f"Invalid usernames passed: {invalid}")
 
-    marks = [mark(mean, stdev, pfail) for _ in range(len(usernames))]
+    marks = [mark(mean, std, pfail) for _ in range(len(usernames))]
 
     return pd.Series(data=marks, index=usernames)

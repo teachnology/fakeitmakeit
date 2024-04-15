@@ -325,12 +325,12 @@ class TestMark:
 
     def test_mean(self):
         # Check that the mean is as expected.
-        marks = np.array([fm.mark(mean=65, stdev=10, pfail=0) for _ in range(100)])
+        marks = np.array([fm.mark(mean=65, std=10, pfail=0) for _ in range(100)])
         assert 60 <= marks.mean() <= 70
 
-    def test_stdev(self):
+    def test_std(self):
         # Check that the standard deviation is as expected.
-        marks = np.array([fm.mark(mean=65, stdev=10, pfail=0) for _ in range(100)])
+        marks = np.array([fm.mark(mean=65, std=10, pfail=0) for _ in range(100)])
         assert 8 <= marks.std() <= 12
 
     def test_isvalid(self):
