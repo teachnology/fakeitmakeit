@@ -444,7 +444,7 @@ def student():
         username=usernameval,
         email=email(domainval="imperial.ac.uk"),
         personal_email=email(),
-        github=f"{course}-{username}",
+        github=f"{courseval}-{usernameval}",
         fee_status="home" if countryval == "United Kingdom" else "overseas",
         enrollment_status="enrolled",
         tutor=name(),
