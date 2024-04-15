@@ -525,6 +525,11 @@ def assignment(usernames, mean=65, std=6, pfail=0.02):
         invalid = [u for u in usernames if not fmiv.username(u)]
         raise ValueError(f"Invalid usernames passed: {invalid}")
 
-    marks = [mark(mean, std, pfail) for _ in range(len(usernames))]
+    marks = [mark(mean, std, pfail) for _ in usernames]
 
-    return pd.Series(data=marks, index=usernames)
+    return pd.Series(
+        data=marks,
+        index=pd.Index(usernames, name="username"),
+        name="mark",
+        dtype="Float64",
+    )

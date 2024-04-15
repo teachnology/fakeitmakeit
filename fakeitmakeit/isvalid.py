@@ -336,7 +336,7 @@ def assignment(value, valid_usernames=None):
     >>> import pandas as pd
     >>> value = pd.Series(
     ...     data = [50.1, 70],
-    ...     index = ["abc123", "sw4321"],
+    ...     index = pd.Index(["abc123", "sw4321"], name="username"),
     ... )
     >>> fm.isvalid.assignment(value)
     True
@@ -362,6 +362,13 @@ def assignment(value, valid_usernames=None):
     if not value.index.is_unique:
         invalid = value.index[value.index.duplicated()]
         logging.warning(f"There are duplicated usernames: {invalid.tolist()}.")
+        return False
+
+    # Check that index name is correct.
+    if value.index.name != "username":
+        logging.warning(
+            f"Invalid index name {value.index.name=} - it must be 'username'."
+        )
         return False
 
     # Check the data (marks).
