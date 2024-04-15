@@ -6,26 +6,18 @@ import fakeitmakeit as fm
 
 @pytest.fixture(scope="function")
 def valid_assignment():
-    assignment = pd.DataFrame(
-        {
-            "username": ["abc123", "def4561", "g789"],
-            "mark": [23.0, 56.8, 72.5],
-            "feedback": ["feedback1", "feedback2", "feedback3"],
-        }
+    return pd.Series(
+        data=[23.0, 56.8, 72.5],
+        index=["abc123", "def4561", "g789"],
     )
-    return assignment.set_index("username")
 
 
 @pytest.fixture(scope="function")
 def invalid_assignment():
-    assignment = pd.DataFrame(
-        {
-            "username": ["abc123", "def4561", "g789"],
-            "mark": [-5, 56.8, 72.5],
-            "feedback": ["feedback1", "feedback2", "feedback3"],
-        }
+    return pd.Series(
+        data=[23.0, -56.8, 72.5],
+        index=["abc123", "def4561", "g789"],
     )
-    return assignment.set_index("username")
 
 
 @pytest.fixture(scope="function")
@@ -387,24 +379,9 @@ class TestAssignment:
         valid_assignment.index = ["1", "2", "3"]
         assert not fm.isvalid.assignment(valid_assignment)
 
-    def test_wrong_index_name(self, valid_assignment):
-        valid_assignment.index.name = "wrong_name"
-        print(10000 * "-")
-        print(valid_assignment.index)
-        print(valid_assignment.index.is_unique)
-        assert not fm.isvalid.assignment(valid_assignment)
-
     def test_index_not_unique(self, valid_assignment):
         valid_assignment.index = ["abc123", "abc123", "gr789"]
         valid_assignment.index.name = "username"
-        assert not fm.isvalid.assignment(valid_assignment)
-
-    def test_wrong_feedback(self, valid_assignment):
-        valid_assignment.loc[:, "feedback"] = [1, 2, 3]
-        assert not fm.isvalid.assignment(valid_assignment)
-
-    def test_wrong_columns(self, valid_assignment):
-        valid_assignment["wrong_column"] = [1, 2, 3]
         assert not fm.isvalid.assignment(valid_assignment)
 
     def test_invalid(self, invalid_assignment):

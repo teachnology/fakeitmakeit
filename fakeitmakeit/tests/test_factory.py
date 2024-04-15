@@ -17,7 +17,7 @@ def cohort():
 
 @pytest.fixture(scope="module")
 def assignment(cohort):
-    return fm.assignment(usernames=cohort.index, add_feedback=True)
+    return fm.assignment(usernames=cohort.index)
 
 
 class TestCID:
@@ -425,37 +425,23 @@ class TestCohort:
 class TestAssignment:
     def test_type(self, assignment):
         # Check that the output is a DataFrame.
-        assert isinstance(assignment, pd.DataFrame)
+        assert isinstance(assignment, pd.Series)
 
-    def test_columns(self, assignment):
-        # Check that the output has the right columns.
-        assert set(assignment.columns) == set(["mark", "feedback"])
-
-    def test_username(self, cohort):
+    def test_index(self, assignment):
         # Check that usernames are as expected.
-        assert cohort.index.name == "username"
-        assert cohort.index.is_unique
-        assert cohort.index.map(fm.isvalid.username).all()
+        assert assignment.index.is_unique
+        assert assignment.index.map(fm.isvalid.username).all()
 
     def test_mark(self, assignment):
         # Check that the marks are as expected.
-        assert assignment["mark"].map(fm.isvalid.mark).all()
-
-    def test_feedback(self, assignment):
-        # Check that the feedback is as expected.
-        assert assignment["feedback"].str.len().ge(10).all()
-
-    def test_no_feedback(self, cohort):
-        # Check that the feedback is as expected.
-        assignment = fm.assignment(usernames=cohort.index, add_feedback=False)
-        assert "feedback" not in assignment.columns
+        assert assignment.apply(fm.isvalid.mark).all()
 
     def test_wrong_username(self):
         # Check that the exception is raised.
         with pytest.raises(ValueError):
-            fm.assignment(usernames=["wrong_username"], add_feedback=True)
+            fm.assignment(usernames=["wrong_username"])
 
     def test_isvalid(self, cohort):
         # Check that the output is a DataFrame.
-        assignment = fm.assignment(usernames=cohort.index, add_feedback=True)
+        assignment = fm.assignment(usernames=cohort.index)
         assert fm.isvalid.assignment(assignment, valid_usernames=cohort.index)

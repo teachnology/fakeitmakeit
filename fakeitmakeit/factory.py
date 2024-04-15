@@ -484,7 +484,7 @@ def cohort(n):
     return data.set_index("username")
 
 
-def assignment(usernames, mean=65, stdev=6, pfail=0.02, add_feedback=True):
+def assignment(usernames, mean=65, stdev=6, pfail=0.02):
     """Generate an assignment.
 
     Parameters
@@ -505,20 +505,16 @@ def assignment(usernames, mean=65, stdev=6, pfail=0.02, add_feedback=True):
 
         Probability that the mark will be 0.
 
-    add_feedback: bool
-
-        If ``True``, column with feedback is added.
-
     Returns
     -------
-    pd.DataFrame
+    pd.Series
 
-        An assignment dataframe.
+        An assignment Series.
 
     Examples
     --------
     >>> import fakeitmakeit as fm
-    >>> fm.assignment(["johndoe", "janedoe"], add_feedback=False)  # doctest: +SKIP
+    >>> fm.assignment(["johndoe", "janedoe"])  # doctest: +SKIP
       username  mark
     0  johndoe  63.0
     1  janedoe  71.0
@@ -530,11 +526,5 @@ def assignment(usernames, mean=65, stdev=6, pfail=0.02, add_feedback=True):
         raise ValueError(f"Invalid usernames passed: {invalid}")
 
     marks = [mark(mean, stdev, pfail) for _ in range(len(usernames))]
-    data = {"username": usernames, "mark": marks}
 
-    if add_feedback:
-        data["feedback"] = [feedback() for _ in range(len(usernames))]
-
-    data = pd.DataFrame(data)
-
-    return data.set_index("username")
+    return pd.Series(data=marks, index=usernames)

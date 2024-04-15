@@ -2,6 +2,8 @@ import logging
 import numbers
 import re
 
+import pandas as pd
+
 import fakeitmakeit.util as fmu
 
 
@@ -313,9 +315,9 @@ def assignment(value, valid_usernames=None):
 
     Parameters
     ----------
-    value: pd.DataFrame
+    value: pd.Series
 
-        Assignment.
+        Assignment. Index values are usernames and data are numerical marks.
 
     valid_usernames: Iterable[str], optional
 
@@ -330,13 +332,12 @@ def assignment(value, valid_usernames=None):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> import pandas as pd
-    >>> value = pd.DataFrame({
-    ...     "username": ["abc123", "sw4321"],
-    ...     "mark": [50.1, 70],
-    ...     "feedback": ["feedback 1", "feedback 2"]
-    ... })
-    >>> value = value.set_index("username")
+    >>> value = pd.Series(
+    ...     data = [50.1, 70],
+    ...     index = ["abc123", "sw4321"],
+    ... )
     >>> fm.isvalid.assignment(value)
     True
 
@@ -346,48 +347,31 @@ def assignment(value, valid_usernames=None):
         logging.error(f"Invalid usernames in valid_usernames: {invalid}")
         raise ValueError("Invalid username(s) in valid_username.")
 
+    # Check that value is a pd.Series.
+    if not isinstance(value, pd.Series):
+        logging.warning(f"Invalid type {type(value)=} for assignment.")
+        return False
+
     # Check that indicies are valid usernames.
     if not value.index.map(username).all():
         invalid = value.index[~value.index.map(username)]
         logging.warning(f"Invalid usernames: {invalid.tolist()}")
         return False
 
-    # Check the index name.
-    if value.index.name != "username":
-        logging.warning(
-            f"Invalid index name {value.index.name} - it must be 'username'."
-        )
-        return False
-
     # Check if there are any repeated usernames.
     if not value.index.is_unique:
         invalid = value.index[value.index.duplicated()]
-        logging.warning(f"There are duplicate usernames: {invalid.tolist()}.")
+        logging.warning(f"There are duplicated usernames: {invalid.tolist()}.")
         return False
 
-    # Check if the columns are as expected.
-    if not set(value.columns) <= {"mark", "feedback"}:
-        logging.warning(
-            f"Invalid column names {set(value.columns) - {'mark', 'feedback'}}."
-        )
-        return False
-
-    # Check the marks column.
-    if not value["mark"].map(mark).all():
-        logging.warning(
-            f"Invalid marks: {value['mark'][~value['mark'].map(mark)].tolist()}."
-        )
-        return False
-
-    # Check the feedback column.
-    if not (value["feedback"].map(type) == str).all():
-        invalid = value["feedback"][~(value["feedback"].map(type) == str)]
-        logging.warning(f"Invalid feedback: {invalid.tolist()}.")
+    # Check the data (marks).
+    if not value.map(mark).all():
+        logging.warning(f"Invalid marks: {value[~value.map(mark)].tolist()}.")
         return False
 
     if valid_usernames is not None:
-        if not (set(value.index) <= set(valid_usernames)):
-            invalid = set(value.index) - set(valid_usernames)
+        if not value.index.isin(valid_usernames).all():
+            invalid = value.index[~value.index.isin(valid_usernames)]
             logging.warning(f"Invalid usernames in value.index: {invalid}.")
             return False
 
