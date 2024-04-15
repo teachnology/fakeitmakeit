@@ -9,9 +9,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install ruff
-        run: pipx install ruff
     
       - name: Ruff
-        run: ruff check --output-format=github .
+        run: pipx run ruff check --output-format=github .
