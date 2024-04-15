@@ -8,7 +8,7 @@ import fakeitmakeit as fm
 def valid_assignment():
     return pd.Series(
         data=[23.0, 56.8, 72.5],
-        index=pd.Index(["abc123", "def4561", "g789"], name='username'),
+        index=pd.Index(["abc123", "def4561", "g789"], name="username"),
     )
 
 
@@ -16,7 +16,7 @@ def valid_assignment():
 def invalid_assignment():
     return pd.Series(
         data=[23.0, -56.8, 72.5],
-        index=pd.Index(["abc123", "def4561", "g789"], name='username'),
+        index=pd.Index(["abc123", "def4561", "g789"], name="username"),
     )
 
 
