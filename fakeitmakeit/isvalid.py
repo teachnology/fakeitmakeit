@@ -298,7 +298,14 @@ def mark(value):
     False
 
     """
-    return isinstance(value, numbers.Real) and (0 <= value <= 100)
+    if not isinstance(value, numbers.Real):
+        logging.warning(f"Invalid type {type(value)=} for mark.")
+        return False
+    elif not 0 <= value <= 100:
+        logging.warning(f"{value=} is not in [0, 100] range.")
+        return False
+    else:
+        return True
 
 
 def assignment(value, valid_usernames=None):
