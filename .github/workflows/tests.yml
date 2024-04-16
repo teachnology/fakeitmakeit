@@ -25,5 +25,8 @@ jobs:
       - name: Install
         run: poetry install --no-interaction
 
+      - name: Poetry version
+        run: poetry env info
+
       - name: Pytest
         run: poetry run pytest
