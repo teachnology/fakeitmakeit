@@ -20,7 +20,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install Poetry
-        run: pipx install --python ${{ matrix.python-version }} poetry
+        run: pipx install --python python${{ matrix.python-version }} poetry
 
       - name: Install
         run: poetry install --no-interaction
