@@ -382,9 +382,9 @@ def mark(mean=65.0, std=6.0, pfail=0.02, pnan=0.0):
     >>> import fakeitmakeit as fm
     >>> fm.mark(mean=65, std=10)  # doctest: +SKIP
     71
-    >>> fm.mark(mean=65, std=10, pfail=1)
+    >>> fm.mark(mean=65, std=10, pfail=1, pnan=0)
     0.0
-    >>> fm.mark(mean=65, std=10, pnan=1)
+    >>> fm.mark(mean=65, std=10, pfail=0, pnan=1)
     nan
 
     """
@@ -486,6 +486,7 @@ def cohort(n):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.cohort(n=30)  # doctest: +SKIP
     ...
 
@@ -498,11 +499,17 @@ def cohort(n):
         }
     )
 
-    return data.set_index("username")
+    data = data.set_index("username")
+
+    # TODO: check datatypes for each column
+
+    return data
 
 
-def assignment(usernames, mean=65, std=6, pfail=0.02):
+def assignment(usernames, mean=65, std=6, pfail=0.02, pnan=0.0):
     """Generate an assignment.
+
+    For each username, a mark is generated using the ``mark`` function.
 
     Parameters
     ----------
@@ -512,15 +519,19 @@ def assignment(usernames, mean=65, std=6, pfail=0.02):
 
     mean: float
 
-        Mean mark.
+        Mean.
 
     std: float
 
-        Standard deviation of marks.
+        Standard deviation.
 
     pfail: float
 
         Probability that the mark will be 0.
+
+    pnan: float
+
+        Probability that the mark will be ``np.nan``.
 
     Returns
     -------
@@ -531,22 +542,22 @@ def assignment(usernames, mean=65, std=6, pfail=0.02):
     Examples
     --------
     >>> import fakeitmakeit as fm
-    >>> fm.assignment(["johndoe", "janedoe"])  # doctest: +SKIP
-             mark
-    johndoe  63.0
-    janedoe  71.0
+    ...
+    >>> fm.assignment(["abc123", "xyz321"])  # doctest: +SKIP
+    username
+    abc123     67.9
+    xyz321    73.08
+    Name: mark, dtype: Float64
 
     """
     usernames = list(usernames)
-    if not all(fmiv.username(username) for username in usernames):
-        invalid = [u for u in usernames if not fmiv.username(u)]
-        raise ValueError(f"Invalid usernames passed: {invalid}")
-
-    marks = [mark(mean, std, pfail) for _ in usernames]
+    invalid = [u for u in usernames if not fmiv.username(u)]
+    if invalid:
+        raise ValueError(f"Invalid usernames: {invalid}.")
 
     return pd.Series(
-        data=marks,
+        data=[mark(mean=mean, std=std, pfail=pfail, pnan=pnan) for _ in usernames],
         index=pd.Index(usernames, name="username"),
         name="mark",
-        dtype="Float64",  # allow missing values if necessary
+        dtype=np.float64,  # allow missing values
     )

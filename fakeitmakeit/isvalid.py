@@ -395,9 +395,10 @@ def assignment(value, valid_usernames=None):
         return False
 
     if valid_usernames is not None:
+        valid_usernames = set(valid_usernames)
         invalid = [u for u in valid_usernames if not username(u)]
         if invalid:
-            raise ValueError("Invalid usernames in valid_username: {invalid}.")
+            raise ValueError(f"Invalid usernames in valid_username: {invalid}.")
 
         valid = value.index.isin(valid_usernames)
         if not valid.all():

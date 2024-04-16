@@ -17,7 +17,7 @@ def cohort():
 
 @pytest.fixture(scope="module")
 def assignment(cohort):
-    return fm.assignment(usernames=cohort.index)
+    return fm.assignment(usernames=cohort.index, mean=65, std=10, pfail=0.1, pnan=0.1)
 
 
 class TestCID:
@@ -445,10 +445,12 @@ class TestAssignment:
     def test_type(self, assignment):
         # Check that the output is a DataFrame.
         assert isinstance(assignment, pd.Series)
+        assert assignment.dtype == np.float64
 
     def test_index(self, assignment):
         # Check that usernames are as expected.
         assert assignment.index.is_unique
+        assert assignment.index.name == "username"
         assert assignment.index.map(fm.isvalid.username).all()
 
     def test_mark(self, assignment):
@@ -458,9 +460,12 @@ class TestAssignment:
     def test_wrong_username(self):
         # Check that the exception is raised.
         with pytest.raises(ValueError):
-            fm.assignment(usernames=["wrong_username"])
+            fm.assignment(usernames=["wrong_username", "abc123"])
 
     def test_isvalid(self, cohort):
-        # Check that the output is a DataFrame.
-        assignment = fm.assignment(usernames=cohort.index)
+        assignment = fm.assignment(usernames=cohort.index, pnan=0.1)
         assert fm.isvalid.assignment(assignment, valid_usernames=cohort.index)
+
+    def test_nan(self, assignment):
+        # Ensure that there are np.nan values in the assignment.
+        assert assignment.isna().sum() > 0
