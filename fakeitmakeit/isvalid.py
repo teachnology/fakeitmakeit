@@ -317,8 +317,8 @@ def assignment(value, valid_usernames=None):
 
     1. ``value`` must be a ``pd.Series``.
     2. Index values must be valid usernames.
-    3. Index name must be "username".
-    4. Index values must be unique.
+    3. Index values must be unique.
+    4. Index name must be "username".
     5. Data values must be valid marks (``float`` in [0, 100] range).
     6. If ``valid_usernames`` is provided, all usernames in index must be in it.
 
@@ -353,44 +353,44 @@ def assignment(value, valid_usernames=None):
     True
 
     """
-    if valid_usernames is not None and not all(map(username, valid_usernames)):
-        invalid = [u for u in valid_usernames if not username(u)]
-        logging.error(f"Invalid usernames in valid_usernames: {invalid}")
-        raise ValueError("Invalid username(s) in valid_username.")
-
     # Check that value is a pd.Series.
     if not isinstance(value, pd.Series):
-        logging.warning(f"Invalid type {type(value)=} for assignment.")
+        logging.warning(f"Invalid type {type(value)=} - pd.Series expected.")
         return False
 
     # Check that indicies are valid usernames.
-    if not value.index.map(username).all():
-        invalid = value.index[~value.index.map(username)]
-        logging.warning(f"Invalid usernames: {invalid.tolist()}")
+    valid = value.index.map(username)
+    if not valid.all():
+        logging.warning(f"Invalid usernames: {value.index[~valid].tolist()}")
         return False
 
-    # Check if there are any repeated usernames.
-    if not value.index.is_unique:
-        invalid = value.index[value.index.duplicated()]
-        logging.warning(f"There are duplicated usernames: {invalid.tolist()}.")
+    # Check if there are any duplicated usernames.
+    duplicated = value.index.duplicated()
+    if duplicated.any():
+        logging.warning(f"Duplicated usernames: {value.index[duplicated].tolist()}.")
         return False
 
     # Check that index name is correct.
     if value.index.name != "username":
         logging.warning(
-            f"Invalid index name {value.index.name=} - it must be 'username'."
+            f"Invalid index name {value.index.name=} - 'username' expected."
         )
         return False
 
-    # Check the data (marks).
-    if not value.map(mark).all():
-        logging.warning(f"Invalid marks: {value[~value.map(mark)].tolist()}.")
+    # Check data (marks).
+    valid = value.map(mark)
+    if not valid.all():
+        logging.warning(f"Invalid marks: {value[~valid].tolist()}.")
         return False
 
     if valid_usernames is not None:
-        if not value.index.isin(valid_usernames).all():
-            invalid = value.index[~value.index.isin(valid_usernames)]
-            logging.warning(f"Invalid usernames in value.index: {invalid}.")
+        invalid = [u for u in valid_usernames if not username(u)]
+        if invalid:
+            raise ValueError("Invalid usernames in valid_username: {invalid}.")
+
+        valid = value.index.isin(valid_usernames)
+        if not valid.all():
+            logging.warning(f"Invalid usernames in index: {value.index[~valid]}.")
             return False
 
     return True
