@@ -341,12 +341,17 @@ def name(genderval=None, countryval=None):
         return res
 
 
-def mark(mean=65.0, std=6.0, pfail=0.02):
+def mark(mean=65.0, std=6.0, pfail=0.02, pnan=0.0):
     """Generate a random mark.
 
     A mark between 0 and 100 is generated from a normal distribution with the given
-    ``mean`` and standard deviation ``std``. There is ``fail_probability`` that the
-    mark will be 0. Resulting mark is rounded to two decimal places.
+    ``mean`` and standard deviation ``std``. There is fail probability ``pfail`` that
+    the mark will be 0. Similarly, the probability that mark will be ``np.nan`` is
+    ``pnan. Resulting mark is rounded to two decimal places.
+
+    Mark 0 can be interpreted as the student not submitting the assignment, whereas
+    ``np.nan`` can be interpreted as the mark not being available, e.g. skipped exam due
+    to mitigating circumstances.
 
     Parameters
     ----------
@@ -362,23 +367,35 @@ def mark(mean=65.0, std=6.0, pfail=0.02):
 
         Probability that the mark will be 0.
 
+    pnan: float
+
+        Probability that the mark will be ``np.nan``.
+
     Returns
     -------
     float
 
-        Randomly generated mark.
+        Randomly generated from [0, 100] range or ``np.nan``.
 
     Examples
     --------
     >>> import fakeitmakeit as fm
     >>> fm.mark(mean=65, std=10)  # doctest: +SKIP
     71
+    >>> fm.mark(mean=65, std=10, pfail=1)
+    0.0
+    >>> fm.mark(mean=65, std=10, pnan=1)
+    nan
 
     """
     rng = np.random.default_rng()
+
     if rng.random() < pfail:
-        # Return 0 with a probability of fail_probability
+        # Return 0 with a probability of pfail.
         return 0.0
+    elif rng.random() < pnan:
+        # Return np.nan with a probability of pfail.
+        return np.nan
     else:
         # Generate a random number from a normal distribution with the given
         # mean and standard deviation.

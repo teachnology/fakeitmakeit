@@ -303,34 +303,53 @@ class TestName:
 class TestMark:
     def test_type(self):
         # Check that mark is a float.
+        # np.nan is an instance of float as well.
         assert isinstance(fm.mark(), float)
 
     def test_range(self):
         # Check that the mark is between 0 and 100.
-        assert 0 <= fm.mark() <= 100
+        assert 0 <= fm.mark(pnan=0) <= 100
 
     def test_pfail_1(self):
         # Check pfail is respected.
-        assert fm.mark(pfail=1) == 0.0
+        assert fm.mark(pfail=1, pnan=0) == 0.0
 
     def test_pfail_0_5(self):
         # Check pfail is respected.
-        marks = np.array([fm.mark(pfail=0.5) for _ in range(100)])
-        assert 35 <= len(marks[marks == 0]) <= 65
+        marks = np.array([fm.mark(pfail=0.5, pnan=0) for _ in range(100)])
+        assert 35 <= (marks == 0).sum() <= 65
 
     def test_pfail_0(self):
         # Check pfail is respected.
-        marks = np.array([fm.mark(pfail=0) for _ in range(100)])
-        assert len(marks[marks == 0]) == 0
+        marks = np.array([fm.mark(pfail=0, pnan=0) for _ in range(100)])
+        assert (marks == 0).sum() == 0
+
+    def test_pnan_1(self):
+        # Check pfail is respected.
+        assert np.isnan(fm.mark(pfail=0, pnan=1))
+
+    def test_pnan_0_5(self):
+        # Check pfail is respected.
+        marks = np.array([fm.mark(pfail=0, pnan=0.5) for _ in range(100)])
+        assert 35 <= np.isnan(marks).sum() <= 65
+
+    def test_pnan_0(self):
+        # Check pfail is respected.
+        marks = np.array([fm.mark(pfail=0, pnan=0) for _ in range(100)])
+        assert np.isnan(marks).sum() == 0
 
     def test_mean(self):
         # Check that the mean is as expected.
-        marks = np.array([fm.mark(mean=65, std=10, pfail=0) for _ in range(100)])
+        marks = np.array(
+            [fm.mark(mean=65, std=10, pfail=0, pnan=0) for _ in range(100)]
+        )
         assert 60 <= marks.mean() <= 70
 
     def test_std(self):
         # Check that the standard deviation is as expected.
-        marks = np.array([fm.mark(mean=65, std=10, pfail=0) for _ in range(100)])
+        marks = np.array(
+            [fm.mark(mean=65, std=10, pfail=0, pnan=0) for _ in range(100)]
+        )
         assert 8 <= marks.std() <= 12
 
     def test_isvalid(self):

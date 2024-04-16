@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -344,6 +345,7 @@ class TestMark:
             (50.0, True),  # Middle value
             (65.12, True),  # Middle value
             (101, False),  # Above upper bound
+            (np.nan, True),  # Missing value
             (-1, False),  # Below lower bound
             ("50", False),  # Not a number
         ],

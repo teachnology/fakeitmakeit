@@ -2,6 +2,7 @@ import logging
 import numbers
 import re
 
+import numpy as np
 import pandas as pd
 
 import fakeitmakeit.util as fmu
@@ -277,6 +278,10 @@ def country(value):
 def mark(value):
     """Check if ``value`` is a valid mark.
 
+    For ``value`` to be valid, it must be:
+    1. An instance of ``numbers.Real`` (float, int, or ``np.nan``).
+    2. If the value is not ``np.nan``, it must be ``0 <= value <= 100``.
+
     Parameters
     ----------
     value: numbers.Real
@@ -292,18 +297,24 @@ def mark(value):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    >>> import numpy as np
+    ...
     >>> fm.isvalid.mark(100)
     True
     >>> fm.isvalid.mark(101)
     False
     >>> fm.isvalid.mark(-1)
     False
+    >>> fm.isvalid.mark(np.nan)
+    True
+    >>> fm.isvalid.mark("100")
+    False
 
     """
     if not isinstance(value, numbers.Real):
-        logging.warning(f"Invalid type {type(value)=} for mark.")
+        logging.warning(f"Invalid type {type(value)=}.")
         return False
-    elif not 0 <= value <= 100:
+    elif not np.isnan(value) and not 0 <= value <= 100:
         logging.warning(f"{value=} is not in [0, 100] range.")
         return False
     else:
@@ -319,7 +330,7 @@ def assignment(value, valid_usernames=None):
     2. Index values must be valid usernames.
     3. Index values must be unique.
     4. Index name must be "username".
-    5. Data values must be valid marks (``float`` in [0, 100] range).
+    5. Data values must be valid marks (``float`` in [0, 100] range or np.nan).
     6. If ``valid_usernames`` is provided, all usernames in index must be in it.
 
     Parameters
