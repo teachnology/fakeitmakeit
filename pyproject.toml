@@ -18,7 +18,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.9"  # 3.9 is the minimum supported by pandas, supported until 10/2025
 pandas = "^2.2.2"
 Faker = "^24.8.0"
 pycountry = "^23.12.11"
