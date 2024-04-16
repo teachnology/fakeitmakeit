@@ -19,8 +19,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Poetry
-        run: pipx install --python python${{ matrix.python-version }} poetry
+      # - name: Install Poetry
+      #   run: pipx install --python python${{ matrix.python-version }} poetry
+
+      - name: Set up poetry
+        uses: abatilo/actions-poetry@v2
 
       - name: Install
         run: poetry install --no-interaction
