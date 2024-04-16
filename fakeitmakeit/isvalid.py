@@ -313,6 +313,15 @@ def mark(value):
 def assignment(value, valid_usernames=None):
     """Check if ``value`` is a valid assignment.
 
+    For the assessment to be valid, the following conditions must be met:
+
+    1. ``value`` must be a ``pd.Series``.
+    2. Index values must be valid usernames.
+    3. Index name must be "username".
+    4. Index values must be unique.
+    5. Data values must be valid marks (``float`` in [0, 100] range).
+    6. If ``valid_usernames`` is provided, all usernames in index must be in it.
+
     Parameters
     ----------
     value: pd.Series
@@ -327,7 +336,8 @@ def assignment(value, valid_usernames=None):
     -------
     bool
 
-        ``True`` if valid, otherwise ``False``.
+        ``True`` if valid, otherwise ``False``. Fail reason is logged with level
+        ``warning``.
 
     Examples
     --------
@@ -337,6 +347,7 @@ def assignment(value, valid_usernames=None):
     >>> value = pd.Series(
     ...     data = [50.1, 70],
     ...     index = pd.Index(["abc123", "sw4321"], name="username"),
+    ...     name = "mark",
     ... )
     >>> fm.isvalid.assignment(value)
     True

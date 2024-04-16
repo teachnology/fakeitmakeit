@@ -509,7 +509,7 @@ def assignment(usernames, mean=65, std=6, pfail=0.02):
     -------
     pd.Series
 
-        An assignment Series.
+        An assignment.
 
     Examples
     --------
@@ -531,5 +531,5 @@ def assignment(usernames, mean=65, std=6, pfail=0.02):
         data=marks,
         index=pd.Index(usernames, name="username"),
         name="mark",
-        dtype="Float64",
+        dtype="Float64",  # allow missing values if necessary
     )
