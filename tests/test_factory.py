@@ -1,11 +1,10 @@
 import collections
 import re
 
+import fakeitmakeit as fm
 import numpy as np
 import pandas as pd
 import pytest
-
-import fakeitmakeit as fm
 
 UINT_RE = re.compile(r"^[0-9]+$")  # unsigned integer regex
 

@@ -1,6 +1,13 @@
 import numbers
+import re
 
 import fakeitmakeit as fm
+
+
+def test_version():
+    # Check that the version is a string.
+    assert isinstance(fm.__version__, str)
+    assert re.fullmatch(r"20[0-9]{2}\.[0-9]{1,2}\.[0-9]{1,2}", fm.__version__)
 
 
 class TestGENDERS:

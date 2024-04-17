@@ -1,3 +1,5 @@
+from importlib.metadata import version
+
 from .factory import (
     assignment,
     cid,
@@ -13,6 +15,8 @@ from .factory import (
     title,
     username,
 )
+
+__version__ = version("fakeitmakeit")
 
 __all__ = [
     "cid",

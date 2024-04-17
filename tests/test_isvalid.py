@@ -1,8 +1,7 @@
+import fakeitmakeit as fm
 import numpy as np
 import pandas as pd
 import pytest
-
-import fakeitmakeit as fm
 
 
 @pytest.fixture(scope="function")
