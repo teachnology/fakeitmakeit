@@ -1,19 +1,21 @@
 [tool.poetry]
-package-mode = true
 name = "fakeitmakeit"
-version = "2024.4.0"
+version = "2024.4.0"  # YYYY.MM.PATCH
 description = "Python package for generating fake student data."
 license = "MIT"
 authors = ["Marijan Beg <m.beg@imperial.ac.uk>"]
 readme = "README.md"
+packages = [
+    { include = "fakeitmakeit", from = "src" },
+]
+include = [{ path = "tests", format = "sdist" } ]
 repository = "https://github.com/marijanbeg/fakeitmakeit"
-keywords = ["testing", "synthetic-data"]
+keywords = ["testing", "synthetic-data", "fake"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: MIT License",
     "Intended Audience :: Education",
     "Intended Audience :: Developers",
-    "Intended Audience :: Science/Research",
     "Natural Language :: English",
     "Operating System :: OS Independent",
 ]
