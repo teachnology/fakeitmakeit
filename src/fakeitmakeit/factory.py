@@ -492,18 +492,25 @@ def cohort(n):
 
     """
     students = [student() for _ in range(n)]
-    data = pd.DataFrame(
-        {
-            col.name: [getattr(student, col.name) for student in students]
-            for col in fields(fmu.Student)
-        }
+    return (
+        pd.DataFrame(
+            {
+                col.name: [getattr(student, col.name) for student in students]
+                for col in fields(fmu.Student)
+            }
+        )
+        .set_index("username", verify_integrity=True)
+        .astype(
+            {
+                "course": "category",
+                "gender": "category",
+                "title": "category",
+                "nationality": "category",
+                "fee_status": "category",
+                "enrollment_status": "category",
+            }
+        )
     )
-
-    data = data.set_index("username")
-
-    # TODO: check datatypes for each column
-
-    return data
 
 
 def assignment(usernames, mean=65, std=6, pfail=0.02, pnan=0.0):
