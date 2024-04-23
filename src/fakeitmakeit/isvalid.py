@@ -26,6 +26,7 @@ def email(value):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.isvalid.email('nikola.tesla@gmail.com')
     True
     >>> fm.isvalid.email('nikola.tesla(at)gmail')
@@ -54,6 +55,7 @@ def username(value):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.isvalid.username('johndoe')
     False
     >>> fm.isvalid.username('abc1234')
@@ -83,6 +85,7 @@ def cid(value):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.isvalid.cid('01234567')
     True
     >>> fm.isvalid.cid('012345678')  # 9 digits
@@ -112,6 +115,7 @@ def name(value):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.isvalid.name('Albert Einstein')
     True
     >>> fm.isvalid.name('Albert')
@@ -144,6 +148,7 @@ def title(value):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.isvalid.title('Mr')
     True
     >>> fm.isvalid.title('mr')
@@ -174,6 +179,7 @@ def course(value):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.isvalid.course('acse')
     True
     >>> fm.isvalid.course('a_very_cool_course')
@@ -202,6 +208,7 @@ def gender(value):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.isvalid.gender('female')
     True
     >>> fm.isvalid.gender('Female')
@@ -230,6 +237,7 @@ def fee_status(value):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.isvalid.fee_status('home')
     True
     >>> fm.isvalid.fee_status('overseas')
@@ -260,6 +268,7 @@ def country(value):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.isvalid.country('United Kingdom')
     True
     >>> fm.isvalid.country('Neverland')
@@ -353,8 +362,8 @@ def assignment(value, valid_usernames=None):
     Examples
     --------
     >>> import fakeitmakeit as fm
-    ...
     >>> import pandas as pd
+    ...
     >>> value = pd.Series(
     ...     data = [50.1, 70],
     ...     index = pd.Index(["abc123", "sw4321"], name="username"),
@@ -422,6 +431,14 @@ def cohort(value):
     bool
 
         ``True`` if valid, otherwise ``False``.
+
+    Examples
+    --------
+    >>> import fakeitmakeit as fm
+    ...
+    >>> cohort = fm.cohort(n=10)
+    >>> fm.isvalid.cohort(cohort)
+    True
 
     """
     # Check that indicies are valid usernames.

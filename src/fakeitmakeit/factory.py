@@ -26,6 +26,7 @@ def cid():
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.cid()  # doctest: +SKIP
     "01234567"
 
@@ -66,6 +67,7 @@ def gender(distribution=dict(fmu.GENDERS)):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.gender()  # doctest: +SKIP
     'male'
 
@@ -99,6 +101,7 @@ def title(genderval=None):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.title('male')
     'Mr'
     >>> fm.title('nonbinary')
@@ -142,6 +145,7 @@ def course(distribution=dict(fmu.COURSES)):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.course()  # doctest: +SKIP
     'acse'
 
@@ -177,6 +181,7 @@ def country(distribution=dict(fmu.COUNTRIES), bias=None):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.country()  # doctest: +SKIP
     'United Kingdom'
     >>> fm.country(bias={'India': 0.5, 'United Kingdom': 0.2})  # doctest: +SKIP
@@ -213,6 +218,7 @@ def username(nameval=None):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.username('John Smith')  # doctest: +SKIP
     'jws4122'
 
@@ -263,6 +269,7 @@ def email(domainval=None):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.email()  # doctest: +SKIP
     'somerandomemail@domain.com'
     >>> fm.email(domainval='myuniversity.ac.uk')  # doctest: +SKIP
@@ -301,6 +308,7 @@ def name(genderval=None, countryval=None):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.name()  # doctest: +SKIP
     'John Smith'
     >>> fm.name(countryval='China')  # doctest: +SKIP
@@ -380,6 +388,7 @@ def mark(mean=65.0, std=6.0, pfail=0.02, pnan=0.0):
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.mark(mean=65, std=10)  # doctest: +SKIP
     71
     >>> fm.mark(mean=65, std=10, pfail=1, pnan=0)
@@ -420,6 +429,7 @@ def feedback():
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.feedback()  # doctest: +SKIP
     ...
 
@@ -439,6 +449,7 @@ def student():
     Examples
     --------
     >>> import fakeitmakeit as fm
+    ...
     >>> fm.student()
     Student(cid=...)
 
