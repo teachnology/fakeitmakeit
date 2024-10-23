@@ -1,6 +1,6 @@
 [project]
 name = "fakeitmakeit"
-version = "2024.4.0"  # YYYY.MM.PATCH
+version = "2024.10.0"  # YYYY.MM.PATCH
 description = "Python package for generating fake student data."
 license = "MIT"
 authors = [
