@@ -1,7 +1,8 @@
-import fakeitmakeit as fm
 import numpy as np
 import pandas as pd
 import pytest
+
+import fakeitmakeit as fm
 
 
 @pytest.fixture(scope="function")
@@ -156,11 +157,8 @@ class TestCID:
         # Test valid CIDs that meet all the criteria
         assert fm.isvalid.cid("01234567")
         assert fm.isvalid.cid("02123456")
+        assert fm.isvalid.cid("05123456")
         assert fm.isvalid.cid("00123456")  # we allow two leading zeros
-
-    def test_invalid_second_digit(self):
-        # Test CIDs with an invalid second digit (should be 0, 1, or 2)
-        assert not fm.isvalid.cid("03123456")
 
     def test_invalid_length(self):
         # Test CIDs with incorrect length (should be exactly 8 digits)

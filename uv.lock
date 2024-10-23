@@ -136,7 +136,7 @@ wheels = [
 [[package]]
 name = "fakeitmakeit"
 version = "2024.4.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "faker" },
     { name = "pandas" },
