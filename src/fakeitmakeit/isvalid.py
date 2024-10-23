@@ -92,8 +92,7 @@ def cid(value):
     False
 
     """
-    # We allow the second digit to be 0, 1, or 2.
-    cid_re = r"0[012][0-9]{6}"
+    cid_re = r"0[0-9]{7}"
     return bool(re.fullmatch(cid_re, value))
 
 
