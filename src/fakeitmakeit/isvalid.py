@@ -125,7 +125,7 @@ def name(value):
     False
 
     """
-    name_re = r"([A-Z][a-z]*)([-\s](([A-Z][a-z]*)|\([A-Z][a-z]*\)))*"
+    name_re = r"([A-Z\u00C0-\u017F][a-z\u00C0-\u017F]*)([-\s](([A-Z\u00C0-\u017F][a-z\u00C0-\u017F]*)|\([A-Z\u00C0-\u017F][a-z\u00C0-\u017F]*\)))*"
     return bool(re.fullmatch(name_re, value))
 
 
