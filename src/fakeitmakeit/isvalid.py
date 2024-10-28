@@ -279,6 +279,8 @@ def country(value):
         "Syria",
         "Columbia",
         "Turkey",
+        "United States of America",
+        "Russia",
     }
     return value in allowed_countries
 
@@ -460,7 +462,7 @@ def cohort(value):
         return False
 
     # Check other columns.
-    for col in set(value.columns) - {"username", "github", "enrollment_status"}:
+    for col in set(value.columns) - {"username", "github", "enrollment_status", "comment"}:
         if "name" in col or col == "tutor":
             data_type = "name"
         elif "email" in col:
