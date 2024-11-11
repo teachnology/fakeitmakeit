@@ -125,7 +125,8 @@ def name(value):
     False
 
     """
-    name_re = r"([A-Z\u00C0-\u017F][a-z\u00C0-\u017F]*)([-\s](([A-Z\u00C0-\u017F][a-z\u00C0-\u017F]*)|\([A-Z\u00C0-\u017F][a-z\u00C0-\u017F]*\)))*"
+    allowed = r"[A-Z\u00C0-\u017F][a-z\u00C0-\u017F]"
+    name_re = rf"({allowed}*)([-\s](({allowed}*)|\({allowed}*\)))*"
     return bool(re.fullmatch(name_re, value))
 
 
@@ -462,7 +463,12 @@ def cohort(value):
         return False
 
     # Check other columns.
-    for col in set(value.columns) - {"username", "github", "enrollment_status", "comment"}:
+    for col in set(value.columns) - {
+        "username",
+        "github",
+        "enrollment_status",
+        "comment",
+    }:
         if "name" in col or col == "tutor":
             data_type = "name"
         elif "email" in col:
