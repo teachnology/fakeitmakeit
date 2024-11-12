@@ -442,14 +442,6 @@ def cohort(value):
 
         ``True`` if valid, otherwise ``False``.
 
-    Examples
-    --------
-    >>> import fakeitmakeit as fm
-    ...
-    >>> cohort = fm.cohort(n=10)
-    >>> fm.isvalid.cohort(cohort)
-    True
-
     """
     # Check that indicies are valid usernames.
     if not value.index.map(username).all():
@@ -485,6 +477,8 @@ def cohort(value):
             data_type = "country"
         else:
             data_type = col
+
+        # print(col, data_type)
 
         validation_function = globals()[f"{data_type}"]
         if not value[col].map(validation_function).all():
