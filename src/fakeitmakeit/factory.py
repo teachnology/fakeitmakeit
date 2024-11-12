@@ -338,12 +338,12 @@ def name(genderval=None, countryval=None):
         pattern = r"\b(?:[A-Z]+\b|PhD|Dr\(a\)|,|Dr|Mr|Mrs|Ms|Miss|\w*\.\w*)"
         res = re.sub(pattern, "", res).strip()
 
-    if fmiv.name(res):
+    if fmiv.name(res, allow_special_characters=False):
         return res
     else:
         # If the name is not valid, then we generate a new one with default faker until
         # it passes validation.
-        while not fmiv.name(res):
+        while not fmiv.name(res, allow_special_characters=False):
             res = Faker().name()
 
         return res

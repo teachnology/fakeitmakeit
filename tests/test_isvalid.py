@@ -184,6 +184,7 @@ class TestCID:
     def test_invalid_trailing_whitespace(self):
         # Test a CID with trailing whitespace
         assert not fm.isvalid.cid("01234567 ")
+        assert not fm.isvalid.cid(" 01234567")
 
 
 class TestName:
@@ -204,6 +205,19 @@ class TestName:
         # capital letter)
         assert fm.isvalid.name("Mary-Ann")
         assert fm.isvalid.name("Jean-Paul")
+
+    def test_valid_accented_characters(self):
+        # Test valid names with accented characters
+        assert fm.isvalid.name("Željko Petrović")
+        assert fm.isvalid.name("Jürgen Müller")
+        assert fm.isvalid.name("Émilie Durand")
+        assert fm.isvalid.name("José García")
+        assert fm.isvalid.name("Łukasz Kowalski")
+        assert fm.isvalid.name("Márquez López")
+        assert fm.isvalid.name("François Dupont")
+        assert fm.isvalid.name("Anaïs Fournier")
+        assert fm.isvalid.name("Mesut Özil")
+        assert fm.isvalid.name("Šimon Novak")
 
     def test_invalid_capitalization(self):
         # Test names with invalid capitalization (names must start each word with a

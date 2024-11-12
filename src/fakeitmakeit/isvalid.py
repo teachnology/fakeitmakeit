@@ -29,7 +29,7 @@ def email(value):
     ...
     >>> fm.isvalid.email('nikola.tesla@gmail.com')
     True
-    >>> fm.isvalid.email('nikola.tesla(at)gmail')
+    >>> fm.isvalid.email('nikola.tesla(at)gmail.com')
     False
 
     """
@@ -96,7 +96,7 @@ def cid(value):
     return bool(re.fullmatch(cid_re, value))
 
 
-def name(value):
+def name(value, allow_special_characters=True):
     """Check if ``value`` is a valid name.
 
     Parameters
@@ -104,6 +104,10 @@ def name(value):
     value: str
 
         Name.
+
+    allow_special_characters: bool, optional
+
+        If ``True``, allow special characters in names, e.g. umlauts.
 
     Returns
     -------
@@ -125,8 +129,12 @@ def name(value):
     False
 
     """
-    allowed = r"[A-Z\u00C0-\u017F][a-z\u00C0-\u017F]"
-    name_re = rf"({allowed}*)([-\s](({allowed}*)|\({allowed}*\)))*"
+    if allow_special_characters:
+        word = r"[A-Z\u00C0-\u017F][a-z\u00C0-\u017F]"
+    else:
+        word = r"[A-Z][a-z]"
+
+    name_re = rf"({word}*)([-\s](({word}*)|\({word}*\)))*"
     return bool(re.fullmatch(name_re, value))
 
 
