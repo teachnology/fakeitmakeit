@@ -1,11 +1,11 @@
 # fakeitmakeit
-[Marijan Beg](https://github.com/marijanbeg)<sup>1,2</sup>
+[Marijan Beg](https://github.com/marijanbeg)<sup>1</sup>
 
 <sup>1</sup> *Department of Earth Science and Engineering, Imperial College London, London SW7 2AZ, UK*  
 
 ## About
 
-`fakeitmakeit` is a Python package designed for generating fake student data for testing purposes. This package is for developers who need realistic, but fictional, student data to test other packages and applications without risking leaking the real student information. It can generate details such as student names, emails, nationalities, usernames, and other personal information.
+`fakeitmakeit` is a Python package designed for generating fake student data for testing purposes. This package is for developers who need realistic, but fictional, student data to test other packages without risking leaking the real student information. It can generate details such as student names, emails, nationalities, usernames, marks, and other information.
 
 ## Installation
 
@@ -17,7 +17,7 @@ pip install fakeitmakeit
 
 ## Documentation
 
-TBC
+TBC (for now, refer to docstrings...)
 
 ## Support
 
