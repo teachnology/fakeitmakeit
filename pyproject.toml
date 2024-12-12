@@ -14,7 +14,7 @@ authors = [
     {name = "Marijan Beg", email = "m.beg@imperial.ac.uk"}
 ]
 include = [{ path = "tests", format = "sdist" } ]
-repository = "https://github.com/marijanbeg/fakeitmakeit"
+repository = "https://github.com/teachnology/fakeitmakeit"
 keywords = ["testing", "synthetic-data", "fake"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
