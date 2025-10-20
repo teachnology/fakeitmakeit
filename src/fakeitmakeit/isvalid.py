@@ -194,7 +194,7 @@ def course(value):
     False
 
     """
-    course_re = r"(acse|edsml|gems)"
+    course_re = r"(acse|edsml|gems|ready)"
     return bool(re.fullmatch(course_re, value))
 
 
@@ -290,6 +290,7 @@ def country(value):
         "Turkey",
         "United States of America",
         "Russia",
+        "Palestine",
     }
     return value in allowed_countries
 

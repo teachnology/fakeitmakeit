@@ -1,19 +1,13 @@
 [project]
 name = "fakeitmakeit"
-version = "2024.11.0"  # YYYY.MM.PATCH
+version = "2025.10.0" # YYYY.MM.PATCH
 description = "Python package for generating fake student data."
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = [
-    "faker>=30.8.0",
-    "pandas>=2.2.3",
-    "pycountry>=24.6.1",
-]
+dependencies = ["faker>=30.8.0", "pandas>=2.2.3", "pycountry>=24.6.1"]
 license = "MIT"
-authors = [
-    {name = "Marijan Beg", email = "m.beg@imperial.ac.uk"}
-]
-include = [{ path = "tests", format = "sdist" } ]
+authors = [{ name = "Marijan Beg", email = "m.beg@imperial.ac.uk" }]
+include = [{ path = "tests", format = "sdist" }]
 repository = "https://github.com/teachnology/fakeitmakeit"
 keywords = ["testing", "synthetic-data", "fake"]
 classifiers = [
