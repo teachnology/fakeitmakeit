@@ -467,6 +467,7 @@ def cohort(value):
     for col in set(value.columns) - {
         "username",
         "github",
+        "github_old",
         "enrollment_status",
         "comment",
     }:
